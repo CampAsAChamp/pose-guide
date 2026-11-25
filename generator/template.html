@@ -33,7 +33,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 button,input{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.wrap{max-width:1320px;margin:0 auto;padding:0 clamp(14px,3vw,36px)}
+.wrap{max-width:1320px;margin:0 auto;padding:0 clamp(20px,5vw,36px)}
 
 .intro{padding:clamp(22px,4vw,44px) 0 14px}
 .intro h1{margin:0;font-family:var(--display);font-weight:700;font-size:clamp(2.1rem,6vw,3.6rem);line-height:1.02;letter-spacing:-.02em}
@@ -82,9 +82,10 @@ dialog::backdrop{background:var(--veil)}
 .viewer{display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);gap:0;max-height:min(100dvh,900px)}
 .shot{position:relative;height:min(100dvh,900px);aspect-ratio:3/4;background:var(--line);touch-action:pan-y}
 .shot svg{display:block;width:100%;height:100%}
-.thirds{position:absolute;inset:0;pointer-events:none}
-.thirds[hidden]{display:none}
-.info{display:flex;flex-direction:column;gap:.2rem;padding:clamp(18px,3vw,36px);overflow:auto;max-height:min(100dvh,900px)}
+.thirds-g{display:none;pointer-events:none}
+body.thirds .thirds-g{display:inline}
+.thirds-g line{vector-effect:non-scaling-stroke}
+.info{display:flex;flex-direction:column;gap:.2rem;padding:clamp(22px,3vw,36px);overflow:auto;max-height:min(100dvh,900px)}
 .pos{margin:0;color:var(--muted);font-variant-numeric:tabular-nums}
 .info h2{margin:.1rem 3rem .5rem 0;font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,4vw,2.8rem);line-height:1.05;letter-spacing:-.015em}
 .tags{list-style:none;margin:0 0 .6rem;padding:0;display:flex;flex-wrap:wrap;gap:.35rem}
@@ -127,6 +128,7 @@ dialog::backdrop{background:var(--veil)}
 <div class="bar">
   <div class="wrap">
     <p class="count" id="count" aria-live="polite"></p>
+    <button class="plain" id="gridToggle" type="button" aria-pressed="false">Grid lines</button>
     <button class="plain" id="savedOnly" type="button" aria-pressed="false">Saved</button>
     <button class="plain" id="clear" type="button">Clear filters</button>
   </div>
@@ -144,7 +146,6 @@ dialog::backdrop{background:var(--veil)}
   <div class="viewer">
     <div class="shot" id="vShot">
       <div id="vArt"></div>
-      <svg class="thirds" id="vThirds" viewBox="0 0 600 800" preserveAspectRatio="none" aria-hidden="true"><g stroke="#fff" stroke-width="1.5" opacity=".8"><line x1="200" y1="0" x2="200" y2="800"/><line x1="400" y1="0" x2="400" y2="800"/><line x1="0" y1="266.7" x2="600" y2="266.7"/><line x1="0" y1="533.3" x2="600" y2="533.3"/></g></svg>
     </div>
     <div class="info">
       <p class="pos" id="vPos"></p>
@@ -182,7 +183,13 @@ dialog::backdrop{background:var(--veil)}
   var showThirds = store.get('pose-thirds', true) !== false;
 
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  function svg(c){ return '<svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="' + esc('Pose ' + c.n + ', ' + c.t) + '">' + c.a + '</svg>'; }
+  var THIRDS = '<g class="thirds-g" stroke="#fff" stroke-width="1.25" opacity=".8" aria-hidden="true"><line x1="200" y1="0" x2="200" y2="800"/><line x1="400" y1="0" x2="400" y2="800"/><line x1="0" y1="266.7" x2="600" y2="266.7"/><line x1="0" y1="533.3" x2="600" y2="533.3"/></g>';
+  function svg(c){ return '<svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="' + esc('Pose ' + c.n + ', ' + c.t) + '">' + c.a + THIRDS + '</svg>'; }
+  function applyThirds(){
+    document.body.classList.toggle('thirds', showThirds);
+    $('gridToggle').setAttribute('aria-pressed', showThirds ? 'true' : 'false');
+    $('vGrid').checked = showThirds;
+  }
   function lower(tags){ return tags.slice(0, 3).map(function(t, i){ return i ? t.toLowerCase() : t; }).join(', '); }
 
   // filter chips
@@ -269,10 +276,16 @@ dialog::backdrop{background:var(--veil)}
     var on = !!saved[c.n];
     $('vSave').setAttribute('aria-pressed', on ? 'true' : 'false');
     $('vSave').textContent = on ? 'Saved ★' : 'Save pose';
-    $('vThirds').hidden = !showThirds; $('vGrid').checked = showThirds;
     if (!dlg.open) { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); }
-    var info = dlg.querySelector('.info'); if (info) info.scrollTop = 0;
-    var vw = dlg.querySelector('.viewer'); if (vw) vw.scrollTop = 0;
+    // showModal focuses the first control (Save, below the drawing) and scrolls to it, so move focus without scrolling and reset to the top
+    try { $('vClose').focus({ preventScroll: true }); } catch (e) {}
+    function top(){
+      var info = dlg.querySelector('.info'); if (info) info.scrollTop = 0;
+      var vw = dlg.querySelector('.viewer'); if (vw) vw.scrollTop = 0;
+      dlg.scrollTop = 0;
+    }
+    top();
+    if (window.requestAnimationFrame) requestAnimationFrame(top);
   }
   function step(d){
     var pool = list.length ? list : CARDS.map(function(_, i){ return i; });
@@ -303,7 +316,9 @@ dialog::backdrop{background:var(--veil)}
     this.setAttribute('aria-pressed', on ? 'true' : 'false');
     this.textContent = on ? 'Saved ★' : 'Save pose';
   });
-  $('vGrid').addEventListener('change', function(){ showThirds = this.checked; $('vThirds').hidden = !showThirds; store.set('pose-thirds', showThirds); });
+  function setThirds(on){ showThirds = on; store.set('pose-thirds', showThirds); applyThirds(); }
+  $('vGrid').addEventListener('change', function(){ setThirds(this.checked); });
+  $('gridToggle').addEventListener('click', function(){ setThirds(!showThirds); });
   var sx = null;
   $('vShot').addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; }, { passive: true });
   $('vShot').addEventListener('touchend', function(e){
@@ -313,6 +328,7 @@ dialog::backdrop{background:var(--veil)}
   }, { passive: true });
 
   $('filters').open = window.matchMedia('(min-width: 760px)').matches;
+  applyThirds();
   render();
   window.addEventListener('hashchange', route);
   route();
