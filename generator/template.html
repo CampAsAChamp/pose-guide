@@ -53,6 +53,11 @@ button{cursor:pointer}
 .chip .n{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .chip[aria-pressed="true"] .n{color:inherit;opacity:.85}
+.active{display:flex;flex-wrap:wrap;gap:.4rem;padding:0 0 12px}
+.active[hidden]{display:none}
+.apill{min-height:2.25rem;padding:.15rem .55rem .15rem .85rem;border:1px solid var(--accent);border-radius:999px;background:var(--surface);font-weight:500;font-size:.92rem;display:inline-flex;align-items:center;gap:.4rem}
+.apill .x{font-size:1.15rem;line-height:1;color:var(--muted)}
+.apill.more{padding:.15rem .85rem;background:var(--accent);color:var(--accent-ink)}
 .search{width:min(100%,22rem);min-height:2.75rem;padding:.4rem .9rem;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
 .search::placeholder{color:var(--muted)}
 
@@ -128,6 +133,7 @@ body.thirds .thirds-g{display:inline}
     <div id="groups"></div>
     <div class="group"><h2><label for="q">Search</label></h2><div><input class="search" id="q" type="search" placeholder="Try “bench” or “window”" autocomplete="off"></div></div>
   </details>
+  <div class="active" id="active" role="group" aria-label="Applied filters" hidden></div>
 </div>
 
 <div class="bar">
@@ -222,6 +228,31 @@ body.thirds .thirds-g{display:inline}
   $('clear').addEventListener('click', clearAll);
   $('clear2').addEventListener('click', clearAll);
 
+  // pills for the applied filters, visible even when the filter panel is closed
+  var MAX_PILLS = 3;
+  function renderActive(){
+    var items = [];
+    GROUPS.forEach(function(g){ g[1].forEach(function(t){ if (sel[t]) items.push({ tag: t, label: t }); }); });
+    if (query) items.push({ q: true, label: '“' + $('q').value.trim() + '”' });
+    var shown = items.slice(0, MAX_PILLS), rest = items.length - shown.length;
+    $('active').hidden = !items.length;
+    $('active').innerHTML = shown.map(function(it){
+      return '<button class="apill" type="button" ' + (it.q ? 'data-q="1"' : 'data-tag="' + esc(it.tag) + '"') +
+        ' aria-label="' + esc('Remove filter ' + it.label) + '">' + esc(it.label) + '<span class="x" aria-hidden="true">×</span></button>';
+    }).join('') + (rest > 0 ? '<button class="apill more" type="button" data-more="1" aria-label="Show ' + rest + ' more applied filters">+' + rest + '</button>' : '');
+  }
+  $('active').addEventListener('click', function(e){
+    var b = e.target.closest('.apill'); if (!b) return;
+    if (b.hasAttribute('data-more')) { $('filters').open = true; $('filters').querySelector('summary').focus(); return; }
+    if (b.hasAttribute('data-q')) { query = ''; $('q').value = ''; }
+    else {
+      var t = b.getAttribute('data-tag'); sel[t] = false;
+      Array.prototype.forEach.call(document.querySelectorAll('.chip'), function(c){ if (c.getAttribute('data-tag') === t) c.setAttribute('aria-pressed', 'false'); });
+    }
+    render();
+    var next = $('active').querySelector('.apill'); (next || $('filters').querySelector('summary')).focus();
+  });
+
   function matches(c){
     if (savedOnly && !saved[c.n]) return false;
     if (query && (c.t + ' ' + c.p + ' ' + c.f + ' ' + c.g.join(' ')).toLowerCase().indexOf(query) < 0) return false;
@@ -247,6 +278,7 @@ body.thirds .thirds-g{display:inline}
     var filtered = Object.keys(sel).some(function(k){ return sel[k]; }) || query || savedOnly;
     $('count').textContent = filtered ? ('Showing ' + list.length + ' of ' + CARDS.length + ' poses') : (CARDS.length + ' poses');
     $('clear').disabled = !filtered;
+    renderActive();
     $('grid').innerHTML = list.map(function(i){
       var c = CARDS[i];
       return '<li><button class="pose" type="button" data-i="' + i + '" aria-label="' + esc('Open pose ' + c.n + ', ' + c.t) + '">' +
