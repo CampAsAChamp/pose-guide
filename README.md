@@ -1,4 +1,4 @@
-# Photo pose guide
+# Photo Pose Guide
 
 https://campasachamp.github.io/pose-guide/
 
@@ -21,5 +21,5 @@ You can also open `index.html` straight from your computer to preview it.
 - All 200 illustrations are stored inside the file as vector drawings, so they stay sharp at any size.
 - Thumbnails are only drawn while they are near the visible part of the page.
 - Each pose has its own address, for example `.../#pose-49`, so a single pose can be linked or bookmarked.
-- "Save pose" keeps a shortlist in the visitor's own browser. It is not shared between people or devices.
+- "Save Pose" keeps a shortlist in the visitor's own browser. It is not shared between people or devices.
 - The two typefaces load from Google Fonts. Without a connection the page falls back to system fonts.

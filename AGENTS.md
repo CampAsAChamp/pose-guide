@@ -1,4 +1,4 @@
-# Photo pose guide
+# Photo Pose Guide
 
 A single self-contained static page, `index.html` (about 4 MB), with 200 illustrated photo poses for solo, partner and group shots. Each pose has a posing tip and a framing tip. It is published with GitHub Pages from the root of `main`.
 
@@ -23,10 +23,10 @@ All pose data is one JSON object in `<script id="poses" type="application/json">
 
 - `groups`: the filter groups, in order:
   - People: Solo, Partner, Group
-  - Pose: Standing, Leaning, Walking, Seated, Crouching, Lying, Action, Mixed levels
-  - Shot: Wide, Full length, Three-quarter, Waist up, Close-up
+  - Pose: Standing, Leaning, Walking, Seated, Crouching, Lying, Action, Mixed Levels
+  - Shot: Wide, Full Length, Three-Quarter, Waist Up, Close-Up
   - Setting: Street, Park, Beach, Field, Viewpoint, Waterfront, Steps, Café, Home, Studio
-  - Angle: Facing camera, Side-on, Back to camera
+  - Angle: Facing Camera, Side-On, Back to Camera
 - `cards`: 200 objects, each with:
   - `n`: pose number (1 to 200)
   - `t`: title

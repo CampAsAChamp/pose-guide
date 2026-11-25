@@ -8,11 +8,11 @@ from .cards_e import sofa_front
 REG = []
 TAGS = {"S": "Solo", "P": "Partner", "G": "Group",
         "St": "Standing", "Le": "Leaning", "Wa": "Walking", "Se": "Seated", "Cr": "Crouching", "Ly": "Lying",
-        "Ac": "Action", "Mx": "Mixed levels",
-        "W": "Wide", "F": "Full length", "T": "Three-quarter", "U": "Waist up", "C": "Close-up",
+        "Ac": "Action", "Mx": "Mixed Levels",
+        "W": "Wide", "F": "Full Length", "T": "Three-Quarter", "U": "Waist Up", "C": "Close-Up",
         "Str": "Street", "Par": "Park", "Bea": "Beach", "Fie": "Field", "Vie": "Viewpoint", "Wat": "Waterfront",
         "Ste": "Steps", "Caf": "Café", "Hom": "Home", "Stu": "Studio",
-        "f": "Facing camera", "s": "Side-on", "b": "Back to camera"}
+        "f": "Facing Camera", "s": "Side-On", "b": "Back to Camera"}
 
 
 def card(title, tags, pose, frame):
