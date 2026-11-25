@@ -1,12 +1,12 @@
 # Photo Pose Guide
 
-https://campasachamp.github.io/pose-guide/
-
 <p align="center">
   <a href="https://campasachamp.github.io/pose-guide/">
     <img src="docs/screenshot.png" alt="Screenshot of the Photo Pose Guide: a grid of illustrated poses with filter and tag controls" width="800">
   </a>
 </p>
+
+https://campasachamp.github.io/pose-guide/
 
 200 illustrated photo poses for solo, partner and group shots. Each pose has a posing tip and a framing tip, and can be filtered by people, pose type, shot, setting and camera angle.
 
