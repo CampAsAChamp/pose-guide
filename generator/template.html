@@ -40,7 +40,9 @@ button{cursor:pointer}
 .intro p{margin:.6rem 0 0;max-width:62ch;color:var(--muted);font-size:1.05rem}
 
 .filters{border-top:1px solid var(--line);padding:6px 0 2px}
-.filters summary{list-style:none;display:flex;align-items:center;gap:.5rem;padding:10px 0;font-weight:600;cursor:pointer;width:max-content}
+.filters summary{list-style:none;display:flex;align-items:center;gap:.55rem;min-height:2.75rem;margin:8px 0;padding:.3rem .95rem;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-weight:600;cursor:pointer;width:max-content}
+.filters summary .ico{width:1.15rem;height:1.15rem;flex:none}
+.filters[open] summary{margin-bottom:12px}
 .filters summary::-webkit-details-marker{display:none}
 .filters summary::after{content:"";width:.5rem;height:.5rem;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .15s}
 .filters[open] summary::after{transform:rotate(-135deg) translateY(-2px)}
@@ -122,7 +124,7 @@ body.thirds .thirds-g{display:inline}
 
 <div class="wrap">
   <details class="filters" id="filters">
-    <summary>Filter poses</summary>
+    <summary><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>Filter poses</summary>
     <div id="groups"></div>
     <div class="group"><h2><label for="q">Search</label></h2><div><input class="search" id="q" type="search" placeholder="Try “bench” or “window”" autocomplete="off"></div></div>
   </details>
