@@ -1,0 +1,4 @@
+generator/.venv
+__pycache__/
+generator/preview.html
+generator/preview*.png
