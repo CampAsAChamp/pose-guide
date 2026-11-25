@@ -7,6 +7,7 @@ Put this folder inside the site's repository (for example as `generator/`), then
 ```
 pip install -r requirements.txt
 python build.py            # rewrites ../index.html with all poses
+python smoke_test.py       # headless-Chrome check of the built page
 python preview.py 201      # contact sheet of chosen poses in preview.html
 ```
 
@@ -67,6 +68,7 @@ Then run `python preview.py <number>` to check it and `python build.py` to rebui
 - `template.html`: the site's HTML, with `__CSS__`, `__JS__`, `__COUNT__` and `__DATA__` swapped in at build time.
 - `styles.css`: the site's CSS.
 - `app.js`: the site's JavaScript (filters, viewer, saving).
+- `smoke_test.py`: loads the built page twice in headless Chrome and checks it works, including that saved poses and the grid setting survive a reload. Standard library only, plus an installed Chrome.
 - `preview.py`: contact sheet of chosen cards.
 - `poses/mannequin.py`: the 3D skeleton, IK, perspective camera, shading and cast shadows.
 - `poses/samples.py`: the first six sample scenes and small SVG helpers.

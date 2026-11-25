@@ -11,6 +11,7 @@ Do not hand-edit the pose data in `index.html`. It is generated from `generator/
 - Edit the Python in `generator/poses/`, or the page itself: `generator/template.html` (HTML), `generator/styles.css` (CSS) and `generator/app.js` (JS). `build.py` inlines the CSS and JS, so the output stays one file.
 - Check poses with `python preview.py <numbers> --png` (run from `generator/`).
 - Run `python build.py` to regenerate `../index.html`.
+- Run `python smoke_test.py` (from `generator/`) after building. It loads the page twice in headless Chrome, checks filters, search, the viewer and saving, confirms state survives a reload, and fails on any console error. It needs only an installed Chrome (or `CHROME=/path/to/chrome`).
 - Read `generator/README.md` first. It documents the camera, scene, pose-dictionary and `@card` APIs.
 - Setup: `pip install -r generator/requirements.txt` (NumPy only). `generator/.venv` is git-ignored.
 
