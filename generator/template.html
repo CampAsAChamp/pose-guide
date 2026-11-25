@@ -50,6 +50,7 @@ button{cursor:pointer}
 .group h2{margin:.42rem 0 0;font-size:.9rem;font-weight:600;color:var(--muted)}
 .chips{display:flex;flex-wrap:wrap;gap:.4rem}
 .chip{min-height:2.5rem;padding:.3rem .8rem;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-weight:500;font-size:.95rem;display:inline-flex;align-items:center;gap:.45rem}
+.chip.zero:not([aria-pressed="true"]){opacity:.5}
 .chip .n{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .chip[aria-pressed="true"] .n{color:inherit;opacity:.85}
@@ -258,12 +259,31 @@ body.thirds .thirds-g{display:inline}
     var next = $('active').querySelector('.apill'); (next || $('filters').querySelector('summary')).focus();
   });
 
-  function matches(c){
+  // does the card pass saved, search and every group's selection except group `skip` (-1 = none skipped)
+  function matchesExcept(c, skip){
     if (savedOnly && !saved[c.n]) return false;
     if (query && (c.t + ' ' + c.p + ' ' + c.f + ' ' + c.g.join(' ')).toLowerCase().indexOf(query) < 0) return false;
-    return GROUPS.every(function(g){
+    return GROUPS.every(function(g, gi){
+      if (gi === skip) return true;
       var on = g[1].filter(function(t){ return sel[t]; });
       return !on.length || on.some(function(t){ return c.g.indexOf(t) >= 0; });
+    });
+  }
+  function matches(c){ return matchesExcept(c, -1); }
+
+  // chip counts show how many poses each tag would give with the other filters applied
+  var chipN = {};
+  Array.prototype.forEach.call(document.querySelectorAll('.chip'), function(b){
+    chipN[b.getAttribute('data-tag')] = { chip: b, n: b.querySelector('.n') };
+  });
+  function updateCounts(){
+    GROUPS.forEach(function(g, gi){
+      var base = CARDS.filter(function(c){ return matchesExcept(c, gi); });
+      g[1].forEach(function(t){
+        var k = base.filter(function(c){ return c.g.indexOf(t) >= 0; }).length, r = chipN[t];
+        r.n.textContent = k;
+        r.chip.classList.toggle('zero', k === 0);
+      });
     });
   }
 
@@ -284,6 +304,7 @@ body.thirds .thirds-g{display:inline}
     $('count').textContent = filtered ? ('Showing ' + list.length + ' of ' + CARDS.length + ' poses') : (CARDS.length + ' poses');
     $('clear').disabled = !filtered;
     renderActive();
+    updateCounts();
     $('grid').innerHTML = list.map(function(i){
       var c = CARDS[i];
       return '<li><button class="pose" type="button" data-i="' + i + '" aria-label="' + esc('Open pose ' + c.n + ', ' + c.t) + '">' +
