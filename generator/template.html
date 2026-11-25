@@ -40,12 +40,13 @@ button{cursor:pointer}
 .intro p{margin:.6rem 0 0;max-width:62ch;color:var(--muted);font-size:1.05rem}
 
 .filters{border-top:1px solid var(--line);padding:6px 0 2px}
-.filters summary{list-style:none;display:flex;align-items:center;gap:.55rem;min-height:2.75rem;margin:8px 0;padding:.3rem .95rem;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-weight:600;cursor:pointer;width:max-content}
-.filters summary .ico{width:1.15rem;height:1.15rem;flex:none}
-.filters[open] summary{margin-bottom:12px}
-.filters summary::-webkit-details-marker{display:none}
-.filters summary::after{content:"";width:.5rem;height:.5rem;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .15s}
-.filters[open] summary::after{transform:rotate(-135deg) translateY(-2px)}
+.frow{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:8px 0}
+.filters.open .frow{margin-bottom:12px}
+.fbtn{display:inline-flex;align-items:center;gap:.55rem;min-height:2.75rem;padding:.3rem .95rem;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-weight:600}
+.fbtn .ico{width:1.15rem;height:1.15rem;flex:none}
+.fbtn::after{content:"";width:.5rem;height:.5rem;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .15s}
+.fbtn[aria-expanded="true"]::after{transform:rotate(-135deg) translateY(-2px)}
+#clear[hidden]{display:none}
 .group{display:grid;grid-template-columns:5.2rem minmax(0,1fr);gap:.4rem .6rem;align-items:start;padding:.35rem 0}
 .group h2{margin:.42rem 0 0;font-size:.9rem;font-weight:600;color:var(--muted)}
 .chips{display:flex;flex-wrap:wrap;gap:.4rem}
@@ -130,11 +131,16 @@ body.thirds .thirds-g{display:inline}
 </header>
 
 <div class="wrap">
-  <details class="filters" id="filters">
-    <summary><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>Filter poses<span class="badge" id="moreBadge" hidden></span></summary>
-    <div id="groups"></div>
-    <div class="group"><h2><label for="q">Search</label></h2><div><input class="search" id="q" type="search" placeholder="Try “bench” or “window”" autocomplete="off"></div></div>
-  </details>
+  <div class="filters" id="filters">
+    <div class="frow">
+      <button class="fbtn" id="filterBtn" type="button" aria-expanded="false" aria-controls="filterPanel"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>Filter poses<span class="badge" id="moreBadge" hidden></span></button>
+      <button class="plain" id="clear" type="button" hidden>Clear filters</button>
+    </div>
+    <div id="filterPanel" hidden>
+      <div id="groups"></div>
+      <div class="group"><h2><label for="q">Search</label></h2><div><input class="search" id="q" type="search" placeholder="Try “bench” or “window”" autocomplete="off"></div></div>
+    </div>
+  </div>
   <div class="active" id="active" role="group" aria-label="Applied filters" hidden></div>
 </div>
 
@@ -143,7 +149,6 @@ body.thirds .thirds-g{display:inline}
     <p class="count" id="count" aria-live="polite"></p>
     <button class="switch" id="gridToggle" type="button" role="switch" aria-checked="false"><span class="track" aria-hidden="true"></span>Grid lines</button>
     <button class="plain" id="savedOnly" type="button" aria-pressed="false">Saved</button>
-    <button class="plain" id="clear" type="button">Clear filters</button>
   </div>
 </div>
 
@@ -256,7 +261,7 @@ body.thirds .thirds-g{display:inline}
       Array.prototype.forEach.call(document.querySelectorAll('.chip'), function(c){ if (c.getAttribute('data-tag') === t) c.setAttribute('aria-pressed', 'false'); });
     }
     render();
-    var next = $('active').querySelector('.apill'); (next || $('filters').querySelector('summary')).focus();
+    var next = $('active').querySelector('.apill'); (next || $('filterBtn')).focus();
   });
 
   // does the card pass saved, search and every group's selection except group `skip` (-1 = none skipped)
@@ -302,7 +307,7 @@ body.thirds .thirds-g{display:inline}
     CARDS.forEach(function(c, i){ if (matches(c)) list.push(i); });
     var filtered = Object.keys(sel).some(function(k){ return sel[k]; }) || query || savedOnly;
     $('count').textContent = filtered ? ('Showing ' + list.length + ' of ' + CARDS.length + ' poses') : (CARDS.length + ' poses');
-    $('clear').disabled = !filtered;
+    $('clear').hidden = !filtered;
     renderActive();
     updateCounts();
     $('grid').innerHTML = list.map(function(i){
@@ -390,7 +395,13 @@ body.thirds .thirds-g{display:inline}
     if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
   }, { passive: true });
 
-  $('filters').open = window.matchMedia('(min-width: 760px)').matches;
+  function setFilterOpen(on){
+    $('filterPanel').hidden = !on;
+    $('filterBtn').setAttribute('aria-expanded', on ? 'true' : 'false');
+    $('filters').classList.toggle('open', on);
+  }
+  $('filterBtn').addEventListener('click', function(){ setFilterOpen($('filterPanel').hidden); });
+  setFilterOpen(window.matchMedia('(min-width: 760px)').matches);
   applyThirds();
   render();
   window.addEventListener('hashchange', route);
