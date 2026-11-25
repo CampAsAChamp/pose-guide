@@ -40,7 +40,7 @@
 
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   var THIRDS = '<g class="thirds-g" stroke="#fff" stroke-width="1.25" opacity=".8" aria-hidden="true"><line x1="200" y1="0" x2="200" y2="800"/><line x1="400" y1="0" x2="400" y2="800"/><line x1="0" y1="266.7" x2="600" y2="266.7"/><line x1="0" y1="533.3" x2="600" y2="533.3"/></g>';
-  function svg(c){ return '<svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="' + esc('Pose ' + c.n + ', ' + c.t) + '">' + c.a + THIRDS + '</svg>'; }
+  function svg(c){ return '<svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="' + esc('Pose ' + c.n + ', ' + c.t + (c.d ? ': ' + c.d : '')) + '">' + c.a + THIRDS + '</svg>'; }
   function applyThirds(){
     document.body.classList.toggle('thirds', showThirds);
     $('gridToggle').setAttribute('aria-checked', showThirds ? 'true' : 'false');
