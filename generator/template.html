@@ -86,7 +86,8 @@ button{cursor:pointer}
 .cap{display:flex;gap:.5rem;align-items:baseline;margin-top:.5rem}
 .num{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.9rem;min-width:1.7rem}
 .name{font-family:var(--display);font-weight:700;font-size:1.06rem;line-height:1.2}
-.saved-mark{margin-left:auto;color:var(--star);font-size:.95rem}
+.saved-mark{margin-left:auto;color:var(--star);display:inline-flex}
+.saved-mark svg{width:1rem;height:1rem}
 .meta{display:block;margin:.1rem 0 0 2.2rem;color:var(--muted);font-size:.85rem;line-height:1.35}
 .empty{padding:48px 0 96px;max-width:46ch}
 .empty p{margin:0 0 1rem;font-size:1.1rem}
@@ -114,6 +115,7 @@ body.thirds .thirds-g{display:inline}
 .switch[aria-checked="true"] .track{background:var(--accent)}
 .switch[aria-checked="true"] .track::after{transform:translateX(1.15rem)}
 .save[aria-pressed="true"]{background:var(--star);border-color:var(--star);color:var(--surface)}
+.save[aria-pressed="true"] .ico{fill:currentColor}
 .nav{display:flex;gap:.5rem;margin-top:auto;padding-top:1.2rem}
 .nav .plain{flex:1}
 .close{position:absolute;top:10px;right:10px;width:2.75rem;height:2.75rem;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:1.4rem;line-height:1}
@@ -179,7 +181,7 @@ body.thirds .thirds-g{display:inline}
       <h3>Framing</h3>
       <p class="tip" id="vFrame"></p>
       <div class="actions">
-        <button class="plain save" id="vSave" type="button" aria-pressed="false">Save pose</button>
+        <button class="plain save sbtn" id="vSave" type="button" aria-pressed="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><span id="vSaveLabel">Save pose</span></button>
         <button class="switch" id="vGrid" type="button" role="switch" aria-checked="false"><span class="track" aria-hidden="true"></span><svg class="gico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>Grid lines</button>
       </div>
       <div class="nav">
@@ -320,7 +322,7 @@ body.thirds .thirds-g{display:inline}
       return '<li><button class="pose" type="button" data-i="' + i + '" aria-label="' + esc('Open pose ' + c.n + ', ' + c.t) + '">' +
         '<span class="frame" data-i="' + i + '"></span>' +
         '<span class="cap"><span class="num">' + c.n + '</span><span class="name">' + esc(c.t) + '</span>' +
-        (saved[c.n] ? '<span class="saved-mark" title="Saved">★</span>' : '') + '</span>' +
+        (saved[c.n] ? '<span class="saved-mark" title="Saved"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span>' : '') + '</span>' +
         '<span class="meta">' + esc(lower(c.g)) + '</span></button></li>';
     }).join('');
     var frames = document.querySelectorAll('.frame');
@@ -348,7 +350,7 @@ body.thirds .thirds-g{display:inline}
     $('vPose').textContent = c.p; $('vFrame').textContent = c.f;
     var on = !!saved[c.n];
     $('vSave').setAttribute('aria-pressed', on ? 'true' : 'false');
-    $('vSave').textContent = on ? 'Saved ★' : 'Save pose';
+    $('vSaveLabel').textContent = on ? 'Saved' : 'Save pose';
     if (!dlg.open) { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); }
     // showModal focuses the first control (Save, below the drawing) and scrolls to it, so move focus without scrolling and reset to the top
     try { $('vClose').focus({ preventScroll: true }); } catch (e) {}
@@ -387,7 +389,7 @@ body.thirds .thirds-g{display:inline}
     store.set('pose-saved', Object.keys(saved).map(Number));
     var on = !!saved[c.n];
     this.setAttribute('aria-pressed', on ? 'true' : 'false');
-    this.textContent = on ? 'Saved ★' : 'Save pose';
+    $('vSaveLabel').textContent = on ? 'Saved' : 'Save pose';
   });
   function setThirds(on){ showThirds = on; store.set('pose-thirds', showThirds); applyThirds(); }
   $('vGrid').addEventListener('click', function(){ setThirds(!showThirds); });
