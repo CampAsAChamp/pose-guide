@@ -401,7 +401,7 @@ body.thirds .thirds-g{display:inline}
     $('filters').classList.toggle('open', on);
   }
   $('filterBtn').addEventListener('click', function(){ setFilterOpen($('filterPanel').hidden); });
-  setFilterOpen(window.matchMedia('(min-width: 760px)').matches);
+  setFilterOpen(false);
   applyThirds();
   render();
   window.addEventListener('hashchange', route);
