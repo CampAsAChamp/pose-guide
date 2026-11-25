@@ -54,8 +54,12 @@ PROBE = r"""<script>
 (async function(){
   var results = [], $ = function(id){ return document.getElementById(id); };
   var sleep = function(ms){ return new Promise(function(r){ setTimeout(r, ms); }); };
+  // Headless virtual time skips ahead without painting frames, so CSS transitions never advance on their own.
+  // Jump every running animation to its end state before checking a result that depends on one.
+  function settle(){ document.getAnimations().forEach(function(a){ try { a.finish(); } catch (e) {} }); }
   function check(name, ok, detail){ results.push({ name: name, ok: !!ok, detail: detail === undefined ? '' : String(detail) }); }
-  function poses(){ return document.querySelectorAll('.pose').length; }
+  // cards fading out after a filter change stay in the DOM briefly as li.leaving, so they are not counted
+  function poses(){ return document.querySelectorAll('#grid > li:not(.leaving) .pose').length; }
   function finish(){
     var out = document.createElement('script'); out.type = 'application/json'; out.id = 'smoke-result';
     out.textContent = JSON.stringify({ results: results, errors: window.__smokeErrors });
@@ -77,21 +81,32 @@ PROBE = r"""<script>
       chip.click(); await sleep(50);
       var solo = poses();
       check('Solo chip narrows list', solo > 0 && solo < 200, solo);
-      check('Clear filters shown', !$('clear').hidden);
+      check('Clear Filters shown', !$('clear').hidden);
       $('clear').click(); await sleep(50);
-      check('Clear filters restores all', poses() === 200, poses());
+      check('Clear Filters restores all', poses() === 200, poses());
 
       $('q').value = 'bench'; $('q').dispatchEvent(new Event('input')); await sleep(50);
       var bench = poses();
       check('search narrows list', bench > 0 && bench < 200, bench);
       $('clear').click(); await sleep(50);
 
+      // Home resets filters, search and the open filter panel
+      $('filterBtn').click(); if ($('filterPanel').hidden) $('filterBtn').click();
+      document.querySelector('.chip[data-tag="Solo"]').click(); await sleep(50);
+      $('homeBar').click(); await sleep(500); // Clear Filters shrinks away before it is hidden
+      check('Home resets filters and closes panel', poses() === 200 && $('filterPanel').hidden && $('clear').hidden, poses());
+
       location.hash = '#pose-5'; await sleep(200);
       check('#pose-5 opens viewer', $('viewer').open && $('vTitle').textContent.length > 0, $('vTitle').textContent);
       $('vSave').click();
       check('Save pose toggles on', $('vSave').getAttribute('aria-pressed') === 'true' && $('vSaveLabel').textContent === 'Saved', $('vSaveLabel').textContent);
       check('Save pose keeps heart icon', $('vSave').querySelector('svg'));
-      location.hash = '#all'; await sleep(200);
+      $('vNext').click(); await sleep(600);
+      check('Next steps to pose 6', location.hash === '#pose-6' && $('vPos').textContent.indexOf('Pose 6') === 0 && !document.querySelector('.art-ghost'), location.hash);
+      $('vPrev').click(); await sleep(600);
+      check('Previous steps back to pose 5', location.hash === '#pose-5' && $('vSave').getAttribute('aria-pressed') === 'true', location.hash);
+      // closing is animated, so allow it time to finish
+      location.hash = '#all'; await sleep(600);
       check('#all closes viewer', !$('viewer').open);
 
       var before = $('gridToggle').getAttribute('aria-checked');
@@ -99,16 +114,26 @@ PROBE = r"""<script>
       check('grid toggle flips', $('gridToggle').getAttribute('aria-checked') !== before, before + ' -> ' + $('gridToggle').getAttribute('aria-checked'));
       if ($('gridToggle').getAttribute('aria-checked') === 'true') $('gridToggle').click(); // leave grid lines off for run 2
 
+      check('tag pills on by default', $('tagToggle').getAttribute('aria-checked') === 'true' && document.querySelectorAll('.pose .mp').length === 600, document.querySelectorAll('.pose .mp').length);
+      $('tagToggle').click();
+      // the pills fold away rather than disappearing at once
+      getComputedStyle(document.querySelector('.meta')).maxHeight; settle();
+      var firstMeta = document.querySelector('.meta');
+      check('tags toggle hides pills', document.body.classList.contains('notags') && firstMeta.offsetHeight === 0 && getComputedStyle(firstMeta).visibility === 'hidden', firstMeta.offsetHeight);
+      $('tagToggle').click(); // leave tags on for run 2
+
       $('savedOnly').click(); await sleep(50);
       check('Saved filter shows saved pose only', poses() === 1, poses());
       $('savedOnly').click(); await sleep(50);
       check('Saved filter off restores all', poses() === 200, poses());
+      await sleep(600);
+      check('no leftover fading cards', document.querySelectorAll('.leaving').length === 0 && document.querySelectorAll('.pose').length === 200, document.querySelectorAll('.leaving').length);
     } else {
       check('grid setting persisted (off)', $('gridToggle').getAttribute('aria-checked') === 'false', $('gridToggle').getAttribute('aria-checked'));
       check('saved pose persisted', JSON.stringify(JSON.parse(localStorage.getItem('pose-saved') || '[]')) === '[5]', localStorage.getItem('pose-saved'));
       $('savedOnly').click(); await sleep(50);
       check('Saved filter after reload', poses() === 1, poses());
-      var card = document.querySelector('.pose');
+      var card = document.querySelector('#grid > li:not(.leaving) .pose');
       check('saved card shows heart mark', card && card.querySelector('.saved-mark svg'));
     }
   } catch (e) {

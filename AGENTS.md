@@ -40,10 +40,13 @@ Use typographic apostrophes in visible text.
 ## Page behaviour
 
 - Filter chips show a count per tag. Tags within a group widen the match (OR). Tags across groups narrow it (AND). The search box matches title, tips and tags.
+- Every filter group label has a small line icon. People, Shot and Angle chips also have icons (head counts, crop size, facing direction), set in `TAG_ICONS` in `generator/app.js`. Pose and Setting chips are text only on purpose: their icons would be vague at chip size.
 - Thumbnails are drawn only near the viewport (IntersectionObserver), to keep 200 SVGs fast.
 - Clicking a pose opens a `<dialog>` viewer with the large drawing, tags, both tips, a thirds-grid toggle, Save, and Previous/Next, which step through the current filter. Arrow keys and swipes also step.
 - `#pose-N` opens a pose and `#all` closes the viewer.
-- Saved poses and the grid setting live in localStorage under `pose-saved` and `pose-thirds`, wrapped in try/catch. They are per browser and not shared.
+- Each grid card shows its first three tags (People, Pose, Shot) as quiet, non-interactive pills. A "Tags" switch in the bar hides them.
+- Saved poses and the grid and tag settings live in localStorage under `pose-saved`, `pose-thirds` and `pose-tags` (tags default to on), wrapped in try/catch. They are per browser and not shared.
+- Motion: the filter panel folds open and shut (CSS grid rows; `hidden` is still the state), chips pop when selected, grid cards slide to their new place when the filters change (the 200 `<li>` nodes are built once and reused; filtered-out cards fade as `li.leaving` before removal), the viewer grows from and shrinks back to the pose's thumbnail, and Previous/Next slide the drawing. All of it is skipped under `prefers-reduced-motion`.
 - Light and dark themes come from CSS custom properties on `:root`. The layout is responsive and has been checked at 390px and 1280px widths.
 
 ## Illustration style (match it for any new or edited art)
