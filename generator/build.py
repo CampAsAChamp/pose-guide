@@ -13,6 +13,11 @@ from poses.catalog import CARDS, GROUPS  # noqa: E402
 SELF_CLOSING = re.compile(r"></(path|rect|circle|line|polygon|ellipse)>")
 
 
+def read(name):
+    with open(os.path.join(HERE, name), encoding="utf-8") as fh:
+        return fh.read()
+
+
 def render(fn):
     return SELF_CLOSING.sub("/>", fn())
 
@@ -31,7 +36,10 @@ def main():
             print(num, title, tags)
     data = {"groups": [[g, ts] for g, ts in GROUPS], "cards": cards}
     blob = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    page = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
+    page = read("template.html")
+    # Inline the stylesheet and script so the page stays one self-contained file.
+    page = page.replace("__CSS__", read("styles.css").rstrip("\n"))
+    page = page.replace("__JS__", read("app.js").rstrip("\n"))
     page = page.replace("__COUNT__", str(len(cards))).replace("__DATA__", blob)
     with open(args.out, "w", encoding="utf-8") as fh:
         fh.write(page)

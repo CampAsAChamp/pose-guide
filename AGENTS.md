@@ -8,7 +8,7 @@ There is no framework or runtime dependency. The only external resources are two
 
 Do not hand-edit the pose data in `index.html`. It is generated from `generator/`:
 
-- Edit the Python in `generator/poses/` (or `generator/template.html` for the page's HTML, CSS and JS).
+- Edit the Python in `generator/poses/`, or the page itself: `generator/template.html` (HTML), `generator/styles.css` (CSS) and `generator/app.js` (JS). `build.py` inlines the CSS and JS, so the output stays one file.
 - Check poses with `python preview.py <numbers> --png` (run from `generator/`).
 - Run `python build.py` to regenerate `../index.html`.
 - Read `generator/README.md` first. It documents the camera, scene, pose-dictionary and `@card` APIs.

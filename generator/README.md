@@ -63,8 +63,10 @@ Then run `python preview.py <number>` to check it and `python build.py` to rebui
 
 ## Files
 
-- `build.py`: renders every card into `template.html` and writes `index.html`.
-- `template.html`: the site's HTML, CSS and JavaScript, with the pose data swapped in at build time.
+- `build.py`: renders every card, inlines `styles.css` and `app.js` into `template.html`, and writes `index.html`.
+- `template.html`: the site's HTML, with `__CSS__`, `__JS__`, `__COUNT__` and `__DATA__` swapped in at build time.
+- `styles.css`: the site's CSS.
+- `app.js`: the site's JavaScript (filters, viewer, saving).
 - `preview.py`: contact sheet of chosen cards.
 - `poses/mannequin.py`: the 3D skeleton, IK, perspective camera, shading and cast shadows.
 - `poses/samples.py`: the first six sample scenes and small SVG helpers.
