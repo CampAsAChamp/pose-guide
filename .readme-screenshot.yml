@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/CampAsAChamp/readme-screenshot/v1.1.4/schema/readme-screenshot.schema.json
+# Config for https://github.com/CampAsAChamp/readme-screenshot. It captures the page in dark mode
+# as the hero image at the top of README.md. See "Updating the screenshot" in the README.
+version: 1
+
+output: docs/screenshot.png
+
+# index.html is a single self-contained file, so there is nothing to build: just serve the repo root.
+server:
+  start: python3 -m http.server {port} --bind 127.0.0.1
+  health_url: "http://127.0.0.1:{port}/index.html"
+
+capture:
+  viewport: { width: 1280, height: 720 }
+  target:
+    type: viewport
+  base_url: /index.html
+  wait_for_animations: true
+  reduced_motion: true
+
+# The page has a single (dark) theme, so there is one capture and no blend.
+theme:
+  modes: [default]
+
+blend:
+  enabled: false
+
+commit:
+  message: "docs: update readme screenshot"

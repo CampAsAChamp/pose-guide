@@ -9,13 +9,14 @@ There is no framework or runtime dependency. The only external resources are two
 Do not hand-edit the pose data in `index.html`. It is generated from `generator/`:
 
 - Edit the Python in `generator/poses/`, or the page itself: `generator/template.html` (HTML), `generator/styles.css` (CSS) and `generator/app.js` (JS). `build.py` inlines the CSS and JS, so the output stays one file.
-- Check poses with `python preview.py <numbers> --png` (run from `generator/`).
-- Run `python build.py` to regenerate `../index.html`.
+- Check poses with `python preview.py <numbers> --png` (run from `generator/`). It screenshots with the same Chrome as the smoke test.
+- Run `python build.py` to regenerate `../index.html`. It first runs the data checks in `generator/checks.py` and writes nothing if any fail.
 - Run `python smoke_test.py` (from `generator/`) after building. It loads the page twice in headless Chrome, checks filters, search, the viewer and saving, confirms state survives a reload, and fails on any console error. It needs only an installed Chrome (or `CHROME=/path/to/chrome`).
 - Read `generator/README.md` first. It documents the camera, scene, pose-dictionary and `@card` APIs.
 - Setup: `pip install -r generator/requirements.txt` (NumPy only). `generator/.venv` is git-ignored.
+- CI (`.github/workflows/check.yml`) rebuilds on every push and fails if the result differs from the committed `index.html`, then runs the smoke test. Commit `index.html` with the generator change that produced it.
 
-**Always add new poses after the existing ones** (end of `poses/cards_i.py`, or a new module imported last in `poses/catalog.py`). Cards are numbered by registration order, so inserting one earlier breaks `#pose-N` links.
+**Pose numbers are permanent.** Every card states its number in its decorator, `@card(201, "Title", ...)`. A new pose takes the next unused number (add it at the end of `poses/cards_i.py`, or in a new module added to the import line in `poses/catalog.py`). Then run `python build.py --lock` once to record the number and title in `generator/pose_numbers.json`. A normal build fails if a recorded number disappears or changes title, because `#pose-N` links would then point at a different pose. Run `--lock` again only for a deliberate rename.
 
 ## Data format
 
@@ -34,8 +35,9 @@ All pose data is one JSON object in `<script id="poses" type="application/json">
   - `p`: pose tip (one or two sentences)
   - `f`: framing tip (one or two sentences)
   - `a`: the illustration as inner SVG markup for a 600 x 800 viewBox (3:4 portrait)
+  - `d` (optional): a description of the drawing for screen readers, used in the drawing's label. Only cards with a hand-written `alt=` have one (currently 1 to 64).
 
-Use typographic apostrophes in visible text.
+Use typographic apostrophes and quotes in visible text. The build turns `'` into `’` and rejects straight `"`.
 
 ## Page behaviour
 
@@ -47,7 +49,7 @@ Use typographic apostrophes in visible text.
 - Each grid card shows its first three tags (People, Pose, Shot) as quiet, non-interactive pills. A "Tags" switch in the bar hides them.
 - Saved poses and the grid and tag settings live in localStorage under `pose-saved`, `pose-thirds` and `pose-tags` (tags default to on), wrapped in try/catch. They are per browser and not shared.
 - Motion: the filter panel folds open and shut (CSS grid rows; `hidden` is still the state), chips pop when selected, grid cards slide to their new place when the filters change (the 200 `<li>` nodes are built once and reused; filtered-out cards fade as `li.leaving` before removal), the viewer grows from and shrinks back to the pose's thumbnail, and Previous/Next slide the drawing. All of it is skipped under `prefers-reduced-motion`.
-- Light and dark themes come from CSS custom properties on `:root`. The layout is responsive and has been checked at 390px and 1280px widths.
+- There is one theme, dark, set by CSS custom properties on `:root`. There is no light mode, no `prefers-color-scheme` handling and no theme switch. The layout is responsive and has been checked at 390px and 1280px widths.
 
 ## Illustration style (match it for any new or edited art)
 

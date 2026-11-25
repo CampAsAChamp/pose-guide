@@ -1,0 +1,23 @@
+# Regenerates docs/screenshot.png (the README hero image) with
+# https://github.com/CampAsAChamp/readme-screenshot, configured in .readme-screenshot.yml.
+# It commits the image back to main only when it changes.
+name: Screenshot
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - .readme-screenshot.yml
+
+jobs:
+  screenshot:
+    uses: CampAsAChamp/readme-screenshot/.github/workflows/capture-and-commit.yml@v1.1.4
+    with:
+      config: .readme-screenshot.yml
+      file_pattern: docs/screenshot.png
+      # Install the tool at the same tag as the workflow above (it defaults to "main").
+      readme_screenshot_ref: v1.1.4
+    permissions:
+      contents: write

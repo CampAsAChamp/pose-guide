@@ -1,15 +1,15 @@
 # Photo pose guide generator
 
-The Python that draws every pose in the photo pose guide and builds the single-file site (`index.html`). It needs only NumPy.
-
-Put this folder inside the site's repository (for example as `generator/`), then:
+The Python that draws every pose in the photo pose guide and builds the single-file site (`../index.html`). It needs NumPy, plus an installed Chrome for the smoke test and screenshots.
 
 ```
 pip install -r requirements.txt
-python build.py            # rewrites ../index.html with all poses
+python build.py            # checks the pose data, then rewrites ../index.html
 python smoke_test.py       # headless-Chrome check of the built page
-python preview.py 201      # contact sheet of chosen poses in preview.html
+python preview.py 12 45    # contact sheet of chosen poses in preview.html (add --png for preview.png)
 ```
+
+GitHub Actions (`.github/workflows/check.yml`) rebuilds the page on every push, fails if it differs from the committed `index.html`, and runs the smoke test. Always commit `index.html` together with the generator change that produced it.
 
 ## How a pose is made
 
@@ -42,37 +42,46 @@ dict(
 
 A limb is either four angles, `(upper_out, upper_forward, lower_out, lower_forward)` in degrees, or a reach target solved with IK: `("ik", frame, (x, y, z), pole)`. The frame is `"w"` world, `"p"` pelvis, `"c"` chest, `"r"` body root or `"g"` ground under the pelvis, or a function `lambda J: point` for targets on another joint or person. The pole picks which way the elbow or knee bends.
 
-Reusable pieces: leg sets (`LS_R`, `LS_L`, `LX`, `LW`, `LSTEP`) and arm targets (`HAIR`, `PHONE`, `SHADE`, `WAVE`, `CLASP`, `BACKH`) are in `poses/helpers.py`; `HIP`, `POCKET`, `CROSS_L`/`CROSS_R`, `walk()`, `sit()` and `stair_sitter()` are in `poses/scenes.py`; `kneel()` is in `cards_c.py`, and `run()` and `prone()` are in `cards_h.py`. `mirror(pose)` in `poses/mannequin.py` flips any pose left to right. A card module that starts with `from .helpers import *` gets everything except the last three.
+Reusable pieces: leg sets (`LS_R`, `LS_L`, `LX`, `LW`, `LSTEP`), arm targets (`HAIR`, `PHONE`, `SHADE`, `WAVE`, `CLASP`, `BACKH`) and whole-pose snippets (`kneel()`, `run()`, `prone()`, `floor_knees()`, `sofa_front()`) are in `poses/helpers.py`; `HIP`, `POCKET`, `CROSS_L`/`CROSS_R`, `walk()`, `sit()` and `stair_sitter()` are in `poses/scenes.py`. `mirror(pose)` in `poses/mannequin.py` flips any pose left to right. Every card module starts with `from .helpers import *`, which brings in all of these; card modules never import from each other. Put anything a second module needs into `helpers.py`.
 
 ## Adding a pose
 
-Add a function with the `@card` decorator at the end of `poses/cards_i.py`, or in a new module that you import last in `poses/catalog.py`. Cards are numbered in the order they are registered, so always add new ones after the existing cards: inserting one earlier would shift every later number and break links such as `#pose-120`.
+Add a function with the `@card` decorator at the end of `poses/cards_i.py`, or in a new module added to the import line in `poses/catalog.py`. The first argument is the pose number. Give a new pose the next unused number (201, 202, ...). A number is a public link (`#pose-120`), so never reuse or change one.
 
 ```python
-@card("Window lean", "S Le T Hom s",
+@card(201, "Window lean", "S Le T Hom s",
       "Lean a shoulder on the window frame, arms folded, eyes on the view.",
-      "Shoot side-on from inside the room and expose for the window light.")
+      "Shoot side-on from inside the room and expose for the window light.",
+      alt="Mannequin leaning a shoulder on a window frame with arms folded.")  # optional screen-reader description
 def my_window_lean():
     cam = cam_tq()
     pose = P(LX, yaw=80, la=CROSS_L, ra=CROSS_R, turn=-10)
     return bg_window() + figs(cam, [pose], shadow=False)
 ```
 
-The tag string uses one short code per group, in order: People (`S P G`), Pose (`St Le Wa Se Cr Ly Ac Mx`), Shot (`W F T U C`), Setting (`Str Par Bea Fie Vie Wat Ste Caf Hom Stu`) and Angle (`f s b`). The full table is `TAGS` in `poses/helpers.py`.
+The tag string uses one short code per group, in order: People (`S P G`), Pose (`St Le Wa Se Cr Ly Ac Mx`), Shot (`W F T U C`), Setting (`Str Par Bea Fie Vie Wat Ste Caf Hom Stu`) and Angle (`f s b`). The full table is `TAGS` in `poses/registry.py`.
 
-Then run `python preview.py <number>` to check it and `python build.py` to rebuild the site.
+Then run `python preview.py <number>` to check it, and `python build.py --lock` once to record the new number and title in `pose_numbers.json`. After that, plain `python build.py` refuses to build if a recorded number disappears or its title changes. For a deliberate rename, edit the title and run `--lock` again.
+
+### What the build checks
+
+`build.py` runs `checks.py` before writing anything and lists every problem it finds: numbers must run 1 to N without gaps, recorded numbers keep their titles, titles are unique, each card has one tag per group in order, tips are one or two sentences, visible text uses typographic quotes rather than `"`, and every drawing parses as SVG. Straight apostrophes are fine; the build turns them into `’`.
 
 ## Files
 
-- `build.py`: renders every card, inlines `styles.css` and `app.js` into `template.html`, and writes `index.html`.
+- `build.py`: renders every card, runs the checks, inlines `styles.css` and `app.js` into `template.html`, and writes `index.html`.
+- `checks.py`: the data checks listed above.
+- `pose_numbers.json`: every published pose number and its title. Written only by `build.py --lock`.
+- `chrome.py`: finds and starts headless Chrome for the smoke test and screenshots. Set `CHROME` to pick the binary and `CHROME_FLAGS` to add switches.
 - `template.html`: the site's HTML, with `__CSS__`, `__JS__`, `__COUNT__` and `__DATA__` swapped in at build time.
 - `styles.css`: the site's CSS.
 - `app.js`: the site's JavaScript (filters, viewer, saving).
 - `smoke_test.py`: loads the built page twice in headless Chrome and checks it works, including that saved poses and the grid setting survive a reload. Standard library only, plus an installed Chrome.
-- `preview.py`: contact sheet of chosen cards.
+- `preview.py`: contact sheet of chosen cards; `--png` screenshots it with Chrome.
 - `poses/mannequin.py`: the 3D skeleton, IK, perspective camera, shading and cast shadows.
-- `poses/samples.py`: the first six sample scenes and small SVG helpers.
+- `poses/registry.py`: the `@card` decorator, the `Card` record, tag codes and filter groups. It imports nothing else from the package, so any module can use it.
+- `poses/samples.py`: small SVG helpers and the first six poses.
 - `poses/scenes.py`: backdrops, props and common pose snippets.
-- `poses/helpers.py`: the `@card` registry, tag codes and extra snippets.
+- `poses/helpers.py`: everything a card module imports: scenes, props and shared pose snippets, plus `@card`.
 - `poses/cards_b.py` to `cards_i.py`: the poses themselves.
-- `poses/catalog.py`: the full ordered list, with tips for cards 1 to 64.
+- `poses/catalog.py`: imports every card module and sorts the cards by number.
