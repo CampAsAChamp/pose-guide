@@ -57,7 +57,8 @@ button{cursor:pointer}
 .active[hidden]{display:none}
 .apill{min-height:2.25rem;padding:.15rem .55rem .15rem .85rem;border:1px solid var(--accent);border-radius:999px;background:var(--surface);font-weight:500;font-size:.92rem;display:inline-flex;align-items:center;gap:.4rem}
 .apill .x{font-size:1.15rem;line-height:1;color:var(--muted)}
-.apill.more{padding:.15rem .85rem;background:var(--accent);color:var(--accent-ink)}
+.badge{min-width:1.7rem;padding:.05rem .5rem;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-size:.85rem;font-weight:600;line-height:1.4;text-align:center;font-variant-numeric:tabular-nums}
+.badge[hidden]{display:none}
 .search{width:min(100%,22rem);min-height:2.75rem;padding:.4rem .9rem;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
 .search::placeholder{color:var(--muted)}
 
@@ -129,7 +130,7 @@ body.thirds .thirds-g{display:inline}
 
 <div class="wrap">
   <details class="filters" id="filters">
-    <summary><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>Filter poses</summary>
+    <summary><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>Filter poses<span class="badge" id="moreBadge" hidden></span></summary>
     <div id="groups"></div>
     <div class="group"><h2><label for="q">Search</label></h2><div><input class="search" id="q" type="search" placeholder="Try “bench” or “window”" autocomplete="off"></div></div>
   </details>
@@ -239,11 +240,15 @@ body.thirds .thirds-g{display:inline}
     $('active').innerHTML = shown.map(function(it){
       return '<button class="apill" type="button" ' + (it.q ? 'data-q="1"' : 'data-tag="' + esc(it.tag) + '"') +
         ' aria-label="' + esc('Remove filter ' + it.label) + '">' + esc(it.label) + '<span class="x" aria-hidden="true">×</span></button>';
-    }).join('') + (rest > 0 ? '<button class="apill more" type="button" data-more="1" aria-label="Show ' + rest + ' more applied filters">+' + rest + '</button>' : '');
+    }).join('');
+    // filters beyond the visible pills are counted on the Filter poses button
+    var badge = $('moreBadge');
+    badge.hidden = rest <= 0;
+    badge.textContent = rest > 0 ? '+' + rest : '';
+    if (rest > 0) badge.setAttribute('aria-label', rest + ' more applied filter' + (rest > 1 ? 's' : ''));
   }
   $('active').addEventListener('click', function(e){
     var b = e.target.closest('.apill'); if (!b) return;
-    if (b.hasAttribute('data-more')) { $('filters').open = true; $('filters').querySelector('summary').focus(); return; }
     if (b.hasAttribute('data-q')) { query = ''; $('q').value = ''; }
     else {
       var t = b.getAttribute('data-tag'); sel[t] = false;
