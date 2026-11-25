@@ -1,12 +1,11 @@
 """Batch 3, part 4: group poses."""
 import math
 from .helpers import *
-from .cards_h import prone, run, floor_knees
 
 WHO = "acbde"
 
 
-@card("Linked trio walk", "G Wa F Str f", "Three walk toward the camera in step, the middle one with arms over both shoulders, outer arms swinging.",
+@card(175, "Linked trio walk", "G Wa F Str f", "Three walk toward the camera in step, the middle one with arms over both shoulders, outer arms swinging.",
       "Shoot a burst from in front and leave a margin either side of the outer walkers.")
 def i01():
     cam = Cam(s=62, D=16, hc=4.4, feet_y=708)
@@ -16,7 +15,7 @@ def i01():
     return sc_street(cam) + figs(cam, [l, m, r])
 
 
-@card("Beach family line", "G Wa W Bea s", "Walk along the shore in a line holding hands, adults at the ends and children between.",
+@card(176, "Beach family line", "G Wa W Bea s", "Walk along the shore in a line holding hands, adults at the ends and children between.",
       "Go wide and side-on, keep the whole chain in the lower half with open beach ahead.")
 def i02():
     cam = Cam(s=48, D=21, hc=3.6, feet_y=656)
@@ -33,7 +32,7 @@ def i02():
     return sc_beach(cam) + figs(cam, ps)
 
 
-@card("Family portrait", "G St F Par f", "Adults stand close behind with an arm around each other, children in front with a parent's hand on each shoulder.",
+@card(177, "Family portrait", "G St F Par f", "Adults stand close behind with an arm around each other, children in front with a parent's hand on each shoulder.",
       "Full length and square-on. Camera at the children's head height keeps everyone in proportion.")
 def i03():
     cam = Cam(s=66, D=15, hc=3.6, feet_y=716)
@@ -47,7 +46,7 @@ def i03():
     return sc_park(cam) + figs(cam, [a, b, J1, J2])
 
 
-@card("Swing walk", "G Wa F Par b", "Two adults walk away with a child between them, lifting the child off the ground by both hands.",
+@card(178, "Swing walk", "G Wa F Par b", "Two adults walk away with a child between them, lifting the child off the ground by both hands.",
       "Shoot from behind in burst mode and keep the frame at the top of the swing.")
 def i04():
     cam = Cam(s=66, D=15, hc=3.4, feet_y=716)
@@ -58,7 +57,7 @@ def i04():
     return sc_path(cam) + figs(cam, [a, b, c])
 
 
-@card("Peek stack", "G Mx F Str f", "Hide behind a corner and lean out one above the other: one squatting, one crouched, one standing, each with a hand on the wall.",
+@card(179, "Peek stack", "G Mx F Str f", "Hide behind a corner and lean out one above the other: one squatting, one crouched, one standing, each with a hand on the wall.",
       "Keep the wall edge near the centre line with the three heads stacked beside it.")
 def i05():
     cam = Cam(s=64, D=15, hc=4.0, feet_y=716)
@@ -71,7 +70,7 @@ def i05():
     return sc_street(cam, stripes=False) + figs(cam, [top, mid, low], extra=wall)
 
 
-@card("Stack", "G St F Stu f", "Line up one behind the other and lean out alternately left and right so every face shows. Front one bends with hands on knees.",
+@card(180, "Stack", "G St F Stu f", "Line up one behind the other and lean out alternately left and right so every face shows. Front one bends with hands on knees.",
       "Shoot square-on from chest height and check each head is clear of the one in front.")
 def i06():
     cam = Cam(s=64, D=15, hc=4.2, feet_y=716)
@@ -85,7 +84,7 @@ def i06():
     return sc_studio(cam, "#E3DDD3", "#D6CFC4") + figs(cam, ps)
 
 
-@card("Bench five", "G Mx F Par f", "Three sit on the bench, two stand behind it leaning forward with hands on the backrest between the heads.",
+@card(181, "Bench five", "G Mx F Par f", "Three sit on the bench, two stand behind it leaning forward with hands on the backrest between the heads.",
       "Square to the bench, camera at seated head height, margin outside both ends.")
 def i07():
     cam = Cam(s=62, D=16, hc=4.2, feet_y=712)
@@ -98,7 +97,7 @@ def i07():
     return sc_park(cam) + figs(cam, seated + back, extra=bench(cam, -3.3, 3.3))
 
 
-@card("Sofa trio", "G Se F Hom f", "Three sit close on the sofa. The middle one puts an arm round each neighbour, who lean in.",
+@card(182, "Sofa trio", "G Se F Hom f", "Three sit close on the sofa. The middle one puts an arm round each neighbour, who lean in.",
       "Square to the sofa at seated eye level with some floor in front of the feet.")
 def i08():
     cam = Cam(s=70, D=15, hc=3.9, feet_y=720)
@@ -110,7 +109,7 @@ def i08():
     return sc_home(cam, zw=-3.2) + figs(cam, [l, m, r], extra=sofa_front(cam, -3.9, 3.9))
 
 
-@card("Toast", "G St T Caf s", "Four stand in a loose ring and bring their cups together in the middle at chest height.",
+@card(183, "Toast", "G St T Caf s", "Four stand in a loose ring and bring their cups together in the middle at chest height.",
       "Shoot through a gap in the ring, crop at mid-thigh and focus on the cups.")
 def i09():
     cam = cam_tq(top=130, s=100)
@@ -129,7 +128,7 @@ def i09():
     return bg_cafe() + figs(cam, ps, extra=cups, shadow=False)
 
 
-@card("Power V", "G St F Stu f", "Stand in a V with one at the point and two each side stepping back, arms folded or hands on hips, feet apart.",
+@card(184, "Power V", "G St F Stu f", "Stand in a V with one at the point and two each side stepping back, arms folded or hands on hips, feet apart.",
       "Shoot from waist height, square to the point person, with the back pair inside the frame edges.")
 def i10():
     cam = Cam(s=56, D=17, hc=3.6, feet_y=716)
@@ -139,7 +138,7 @@ def i10():
     return sc_studio(cam) + figs(cam, ps)
 
 
-@card("Step levels", "G Mx F Ste f", "Use the steps for height: one sits low in front, two sit a couple of steps up either side, two stand at the back.",
+@card(185, "Step levels", "G Mx F Ste f", "Use the steps for height: one sits low in front, two sit a couple of steps up either side, two stand at the back.",
       "Straight on with the steps level, stepping back until the top pair's heads have space above.")
 def i11():
     cam = Cam(s=60, D=16, hc=4.4, feet_y=728)
@@ -151,7 +150,7 @@ def i11():
     return o + figs(cam, ps, shadow=False)
 
 
-@card("Wall row", "G Se F Par f", "Four sit along a low wall with legs hanging, arms round each other, end people angled in.",
+@card(186, "Wall row", "G Se F Par f", "Four sit along a low wall with legs hanging, arms round each other, end people angled in.",
       "Square to the wall and full length with a margin beyond each end.")
 def i12():
     cam = Cam(s=58, D=17, hc=4.4, feet_y=708)
@@ -163,7 +162,7 @@ def i12():
     return sc_park(cam) + figs(cam, ps, extra=lowwall(cam, -5.6, 5.6))
 
 
-@card("Wall row with a view", "G Se W Vie b", "Four sit along the wall facing the view, arms across each other's backs, one pointing at something in the distance.",
+@card(187, "Wall row with a view", "G Se W Vie b", "Four sit along the wall facing the view, arms across each other's backs, one pointing at something in the distance.",
       "Go wide from behind with the row low in the frame and the landscape above.")
 def i13():
     cam = Cam(s=52, D=19, hc=4.2, feet_y=668)
@@ -176,7 +175,7 @@ def i13():
     return sc_view(cam) + figs(cam, ps, extra=lowwall(cam, -5.6, 5.6))
 
 
-@card("Crouch trio", "G Mx T Str f", "One squats low in front, two stand close behind and lean in with hands on their knees.",
+@card(188, "Crouch trio", "G Mx T Str f", "One squats low in front, two stand close behind and lean in with hands on their knees.",
       "Camera at the squatter's eye level so the three faces stack in a tight triangle.")
 def i14():
     cam = Cam(s=84, D=12.5, hc=2.8, feet_y=722)
@@ -193,7 +192,7 @@ def i14():
         cam, [a, lean(-1.35, "c", 1.0, 14), lean(1.35, "b", 0.95, -14)], zclip=zw + 0.1)
 
 
-@card("Field run", "G Ac F Fie f", "Four run toward the camera in a loose line, each at a different point in the stride.",
+@card(189, "Field run", "G Ac F Fie f", "Four run toward the camera in a loose line, each at a different point in the stride.",
       "Shoot a burst from low down and let them run past either side of you.")
 def i15():
     cam = Cam(s=54, D=17, hc=4.0, feet_y=716)
@@ -202,7 +201,7 @@ def i15():
     return sc_field(cam) + figs(cam, ps)
 
 
-@card("Crossing line", "G Wa F Str b", "Four walk away across the crossing in single file with even gaps, each mid-stride.",
+@card(190, "Crossing line", "G Wa F Str b", "Four walk away across the crossing in single file with even gaps, each mid-stride.",
       "Shoot from behind and slightly to one side so the four figures don't overlap.")
 def i16():
     cam = Cam(s=56, D=17, hc=4.4, feet_y=708)
@@ -212,7 +211,7 @@ def i16():
     return sc_street(cam) + figs(cam, ps)
 
 
-@card("Group selfie", "G St U Bea f", "Two in front, three behind leaning in between the gaps, the tallest at the edge stretching an arm out with the phone.",
+@card(191, "Group selfie", "G St U Bea f", "Two in front, three behind leaning in between the gaps, the tallest at the edge stretching an arm out with the phone.",
       "Hold the phone high and tilt it down. Check both ends of the group are inside the frame.")
 def i17():
     cam = cam_tq(top=170, s=92, hc=5.4, D=10)
@@ -222,7 +221,7 @@ def i17():
     return sc_beach(cam) + figs(cam, ps, shadow=False)
 
 
-@card("Elbows row", "G Ly F Par f", "Three lie on their fronts in a row, propped on the elbows with feet kicked up, shoulders touching.",
+@card(192, "Elbows row", "G Ly F Par f", "Three lie on their fronts in a row, propped on the elbows with feet kicked up, shoulders touching.",
       "Camera on the ground a few steps in front, level with their eyes.")
 def i18():
     cam = Cam(s=84, D=11, hc=1.7, feet_y=636)
@@ -230,7 +229,7 @@ def i18():
                                     prone(x=2.2, yaw=-14, who="b", size=0.95, tilt=-5)])
 
 
-@card("Sunset row", "G Se W Bea b", "Three sit on the sand facing the water, legs out, the middle one with arms round the other two.",
+@card(193, "Sunset row", "G Se W Bea b", "Three sit on the sand facing the water, legs out, the middle one with arms round the other two.",
       "Go wide from behind at sunset with the row small and low in the frame.")
 def i19():
     cam = Cam(s=52, D=20, hc=3.2, feet_y=640)
@@ -241,7 +240,7 @@ def i19():
     return sc_beach(cam, sunset=True) + figs(cam, ps)
 
 
-@card("Rail row", "G Le F Wat f", "Four lean back on the rail in a row with elbows hooked over it, each crossing a different foot.",
+@card(194, "Rail row", "G Le F Wat f", "Four lean back on the rail in a row with elbows hooked over it, each crossing a different foot.",
       "Square to the rail and full length with a margin at both ends.")
 def i20():
     cam = Cam(s=56, D=17, hc=4.4, feet_y=710)
@@ -257,7 +256,7 @@ def i20():
     return sc_water_x(cam, zr) + figs(cam, ps, zclip=zr)
 
 
-@card("Fence row", "G Le F Fie b", "Three lean on the fence side by side with forearms over the top rail, looking out across the field.",
+@card(195, "Fence row", "G Le F Fie b", "Three lean on the fence side by side with forearms over the top rail, looking out across the field.",
       "Shoot from behind, square to the fence, with the field filling the top half.")
 def i21():
     cam = Cam(s=64, D=15, hc=4.4, feet_y=712)
@@ -273,7 +272,7 @@ def i21():
     return sc_field(cam) + fence + figs(cam, [lean(-2.1, "c", 0.97, -40, "l"), lean(0, "a", 1.02, 0, "r"), lean(2.1, "b", 0.94, 40, "r")], zclip=zr)
 
 
-@card("Hands in", "G St T Stu s", "Four stand in a ring, each with one arm stretched to the middle so the hands stack on top of each other.",
+@card(196, "Hands in", "G St T Stu s", "Four stand in a ring, each with one arm stretched to the middle so the hands stack on top of each other.",
       "Shoot through a gap in the ring and crop at mid-thigh with the stacked hands in the centre.")
 def i22():
     cam = cam_tq(top=130, s=100)
@@ -289,7 +288,7 @@ def i22():
     return bg_plain("#DCE2E6", "#E8ECEF") + figs(cam, ps, shadow=False)
 
 
-@card("Conga", "G Wa F Bea s", "Four walk in a line side-on with hands on the shoulders of the person in front; the leader throws both arms up.",
+@card(197, "Conga", "G Wa F Bea s", "Four walk in a line side-on with hands on the shoulders of the person in front; the leader throws both arms up.",
       "Shoot side-on in burst mode with the whole line in frame and space ahead of the leader.")
 def i23():
     cam = Cam(s=54, D=18, hc=4.2, feet_y=712)
@@ -307,7 +306,7 @@ def i23():
     return sc_beach(cam) + figs(cam, ps)
 
 
-@card("Cheer", "G Ac F Fie f", "Five stand in a staggered line and throw their arms up together, each with a different gesture.",
+@card(198, "Cheer", "G Ac F Fie f", "Five stand in a staggered line and throw their arms up together, each with a different gesture.",
       "Shoot from low with sky behind the hands and count them in.")
 def i24():
     cam = Cam(s=52, D=18, hc=3.4, feet_y=716)
@@ -319,7 +318,7 @@ def i24():
     return sc_field(cam) + figs(cam, ps)
 
 
-@card("Diagonal line", "G St T Str f", "Line up on a diagonal running away from the camera, bodies angled and shoulders overlapping, all faces to the lens.",
+@card(199, "Diagonal line", "G St T Str f", "Line up on a diagonal running away from the camera, bodies angled and shoulders overlapping, all faces to the lens.",
       "Stand at the near end of the line and crop at mid-thigh so the heads step back across the frame.")
 def i25():
     cam = cam_tq(top=130, s=96, D=10)
@@ -329,7 +328,7 @@ def i25():
     return sc_street(cam, stripes=False) + figs(cam, ps, shadow=False)
 
 
-@card("Class photo", "G St F Ste f", "Stand in two rows on the steps, back row two steps up and offset into the gaps, hands in front or at the sides.",
+@card(200, "Class photo", "G St F Ste f", "Stand in two rows on the steps, back row two steps up and offset into the gaps, hands in front or at the sides.",
       "Straight on from the bottom with the camera level, far enough back for a margin all round.")
 def i26():
     cam = Cam(s=54, D=17, hc=4.4, feet_y=728)

@@ -8,7 +8,7 @@ def knees_pole(sd):
     return lambda J: J["k" + sd] - J["s" + sd]
 
 
-@card("Chair straddle", "S Se F Stu f", "Sit backwards on a chair with legs either side, forearms folded along the top of the backrest.",
+@card(108, "Chair straddle", "S Se F Stu f", "Sit backwards on a chair with legs either side, forearms folded along the top of the backrest.",
       "Square-on at the sitter's chest height. Keep the chair legs and feet in frame.")
 def g01():
     cam = Cam(**CH)
@@ -17,7 +17,7 @@ def g01():
     return sc_studio(cam) + figs(cam, [pose], extra=chair_front(cam, back="front"))
 
 
-@card("Elbows on knees", "S Se F Stu f", "Sit forward on the chair, feet apart, elbows on the knees and hands hanging together. Lift the eyes to the lens.",
+@card(109, "Elbows on knees", "S Se F Stu f", "Sit forward on the chair, feet apart, elbows on the knees and hands hanging together. Lift the eyes to the lens.",
       "Shoot from the sitter's eye level so the lean reads as engaged rather than slumped.")
 def g02():
     cam = Cam(**CH)
@@ -26,7 +26,7 @@ def g02():
     return sc_studio(cam, "#E3DDD3", "#D6CFC4") + figs(cam, [pose], extra=chair_front(cam))
 
 
-@card("Knee over knee", "S Se F Hom s", "Sit back in the chair with one knee crossed over the other and both hands resting on the top knee.",
+@card(110, "Knee over knee", "S Se F Hom s", "Sit back in the chair with one knee crossed over the other and both hands resting on the top knee.",
       "Shoot side-on at seat height and leave space in front of the knees.")
 def g03():
     cam = Cam(**CH)
@@ -35,7 +35,7 @@ def g03():
     return sc_home(cam) + figs(cam, [pose], extra=chair_side(cam, -0.3, 1))
 
 
-@card("Slouch", "S Se F Stu s", "Slide down in the chair, legs stretched out with ankles crossed, hands at the pockets, head back.",
+@card(111, "Slouch", "S Se F Stu s", "Slide down in the chair, legs stretched out with ankles crossed, hands at the pockets, head back.",
       "Shoot side-on and low so the long diagonal from head to heels crosses the frame.")
 def g04():
     cam = Cam(**CH)
@@ -44,7 +44,7 @@ def g04():
     return sc_studio(cam) + figs(cam, [pose], extra=chair_side(cam, -1.25, 1))
 
 
-@card("Bench knee hug", "S Se F Par s", "Sit sideways on the bench with feet up on the seat and wrap both arms around the nearer shin.",
+@card(112, "Bench knee hug", "S Se F Par s", "Sit sideways on the bench with feet up on the seat and wrap both arms around the nearer shin.",
       "Shoot from the front of the bench at seat height, with the empty end of the bench in frame.")
 def g05():
     cam = Cam(s=70, D=15, hc=4.2, feet_y=708)
@@ -55,7 +55,7 @@ def g05():
     return sc_park(cam) + figs(cam, [pose], extra=bench(cam, -3.3, 3.3))
 
 
-@card("Bench lean", "S Se F Par f", "Sit forward on the bench with elbows on the knees and hands clasped, head turned to look off to one side.",
+@card(113, "Bench lean", "S Se F Par f", "Sit forward on the bench with elbows on the knees and hands clasped, head turned to look off to one side.",
       "Camera at seated eye level. Leave space on the side of the gaze.")
 def g06():
     cam = Cam(s=70, D=15, hc=4.2, feet_y=708)
@@ -64,7 +64,7 @@ def g06():
     return sc_park(cam) + figs(cam, [pose], extra=bench(cam, -3.3, 3.3))
 
 
-@card("Bench with a view", "S Se F Vie b", "Sit at one end of the bench facing the view, one arm stretched along the top of the backrest.",
+@card(114, "Bench with a view", "S Se F Vie b", "Sit at one end of the bench facing the view, one arm stretched along the top of the backrest.",
       "Shoot from behind with the sitter on a third line and the view over the empty end of the bench.")
 def g07():
     cam = Cam(s=80, D=13, hc=4.3, feet_y=716)
@@ -72,7 +72,7 @@ def g07():
     return sc_view(cam) + figs(cam, [pose], extra=bench(cam, -2.9, 2.9, back=-1))
 
 
-@card("Step recline", "S Se F Ste f", "Sit on a step and lean back with both elbows on the step behind, one foot a step lower than the other.",
+@card(115, "Step recline", "S Se F Ste f", "Sit on a step and lean back with both elbows on the step behind, one foot a step lower than the other.",
       "Straight on with the steps level. Keep the camera at chest height so the chin doesn't dominate.")
 def g08():
     cam = Cam(s=80, D=12, hc=3.6, feet_y=650)
@@ -84,7 +84,7 @@ def g08():
     return o + figs(cam, [pose], shadow=False)
 
 
-@card("Stoop sit", "S Se F Ste f", "Sit on the steps with feet wide on the step below, forearms on the knees and hands hanging.",
+@card(116, "Stoop sit", "S Se F Ste f", "Sit on the steps with feet wide on the step below, forearms on the knees and hands hanging.",
       "Get low and shoot slightly upward so the sitter looks down into the lens.")
 def g09():
     cam = Cam(s=84, D=12, hc=2.4, feet_y=632)
@@ -96,7 +96,7 @@ def g09():
     return o + figs(cam, [pose], shadow=False)
 
 
-@card("Wall dangle", "S Se F Par f", "Sit on a low wall with hands on the edge either side, ankles crossed and swinging, head tilted.",
+@card(117, "Wall dangle", "S Se F Par f", "Sit on a low wall with hands on the edge either side, ankles crossed and swinging, head tilted.",
       "Full length from the front. Keep the wall level and both feet in frame.")
 def g10():
     cam = Cam(s=74, D=14, hc=4.4, feet_y=712)
@@ -105,7 +105,7 @@ def g10():
     return sc_park(cam) + figs(cam, [pose], extra=lowwall(cam))
 
 
-@card("Knee up on the wall", "S Se F Vie f", "Sit on the wall with one foot up on it, arms wrapped around that knee, other leg hanging.",
+@card(118, "Knee up on the wall", "S Se F Vie f", "Sit on the wall with one foot up on it, arms wrapped around that knee, other leg hanging.",
       "Shoot from the front with the view behind. Camera at the sitter's chest height.")
 def g11():
     cam = Cam(s=74, D=14, hc=4.4, feet_y=712)
@@ -116,7 +116,7 @@ def g11():
     return sc_view(cam) + figs(cam, [pose], extra=lowwall(cam))
 
 
-@card("Cross-legged", "S Se F Hom f", "Sit cross-legged on the floor, back tall, a hand resting on each knee.",
+@card(119, "Cross-legged", "S Se F Hom f", "Sit cross-legged on the floor, back tall, a hand resting on each knee.",
       "Bring the camera down to the sitter's chest height and shoot square-on.")
 def g12():
     cam = Cam(s=110, D=10, hc=2.6, feet_y=690)
@@ -127,7 +127,7 @@ def g12():
     return sc_home(cam, zw=-2.2) + rug + figs(cam, [pose])
 
 
-@card("Back to the wall", "S Se F Str f", "Sit on the ground against the wall, one leg out straight, the other knee up with a forearm resting on it.",
+@card(120, "Back to the wall", "S Se F Str f", "Sit on the ground against the wall, one leg out straight, the other knee up with a forearm resting on it.",
       "Shoot from low down, square to the wall, with a little ground in front of the feet.")
 def g13():
     cam = Cam(s=100, D=11, hc=2.4, feet_y=700)
@@ -138,7 +138,7 @@ def g13():
     return sc_wall(cam, col="#C98F78", zw=zw, dado=None, brick="#B67C66") + figs(cam, [pose], zclip=zw + 0.1)
 
 
-@card("Elbow recline", "S Ly F Bea s", "Lie back propped on both elbows, one knee up, chin tucked to look along the body toward the camera.",
+@card(121, "Elbow recline", "S Ly F Bea s", "Lie back propped on both elbows, one knee up, chin tucked to look along the body toward the camera.",
       "Get down to ground level and shoot side-on so the whole body crosses the frame.")
 def g14():
     cam = Cam(s=80, D=12.5, hc=2.4, feet_y=690)
@@ -149,7 +149,7 @@ def g14():
     return sc_beach(cam) + figs(cam, [pose])
 
 
-@card("On the back", "S Ly F Par s", "Lie flat on the back with knees up and both hands behind the head, elbows wide.",
+@card(122, "On the back", "S Ly F Par s", "Lie flat on the back with knees up and both hands behind the head, elbows wide.",
       "Shoot side-on from ground level. Grass or a blanket gives a clean base line.")
 def g15():
     cam = Cam(s=80, D=12.5, hc=2.4, feet_y=690)
@@ -160,7 +160,7 @@ def g15():
     return sc_park(cam) + figs(cam, [pose])
 
 
-@card("Side lying", "S Ly F Bea f", "Lie on one side facing the camera, head propped on a hand, top knee bent forward, free hand on the ground.",
+@card(123, "Side lying", "S Ly F Bea f", "Lie on one side facing the camera, head propped on a hand, top knee bent forward, free hand on the ground.",
       "Camera at ground level and square to the body. Leave a little space beyond the feet.")
 def g16():
     cam = Cam(s=72, D=13, hc=2.2, feet_y=690)
@@ -170,7 +170,7 @@ def g16():
     return sc_beach(cam) + figs(cam, [pose])
 
 
-@card("Swing", "S Se F Par s", "Sit on the swing holding both ropes, lean back and stretch the legs out in front.",
+@card(124, "Swing", "S Se F Par s", "Sit on the swing holding both ropes, lean back and stretch the legs out in front.",
       "Shoot side-on in burst mode and keep the frame at the front of the arc.")
 def g17():
     cam = Cam(s=70, D=14, hc=4.2, feet_y=712)
@@ -182,7 +182,7 @@ def g17():
     return sc_park(cam) + figs(cam, [pose], extra=extra)
 
 
-@card("Window seat", "S Se F Hom s", "Sit sideways in the window with the back against the frame, near knee up, hands on the knee, looking out.",
+@card(125, "Window seat", "S Se F Hom s", "Sit sideways in the window with the back against the frame, near knee up, hands on the knee, looking out.",
       "Expose for the window light and shoot from inside the room at seat height.")
 def g18():
     cam = Cam(s=74, D=14, hc=4.0, feet_y=716)
@@ -199,7 +199,7 @@ def g18():
     return o + figs(cam, [pose], extra=extra, shadow=False)
 
 
-@card("Desk candid", "S Se T Hom s", "Sit at the desk with both hands on the laptop and turn the head toward the camera mid-task.",
+@card(126, "Desk candid", "S Se T Hom s", "Sit at the desk with both hands on the laptop and turn the head toward the camera mid-task.",
       "Shoot from the side of the desk at seated eye level. Clear the clutter behind the screen.")
 def g19():
     cam = Cam(s=120, D=10, hc=4.6, feet_y=455 + 4.6 * 120)
@@ -215,7 +215,7 @@ def g19():
     return o + figs(cam, [pose], extra=desk + [Raw(-0.6, lap)] + chair_side(cam, -1.2, 1), shadow=False)
 
 
-@card("Counter stool", "S Se T Caf s", "Sit side-on on a high stool, feet on the rung, one forearm on the counter with a cup, other hand on the thigh.",
+@card(127, "Counter stool", "S Se T Caf s", "Sit side-on on a high stool, feet on the rung, one forearm on the counter with a cup, other hand on the thigh.",
       "Shoot along the counter and crop below the knees. Leave space in front of the face.")
 def g20():
     cam = Cam(s=110, D=11, hc=5.0, feet_y=430 + 5.0 * 110)
@@ -229,7 +229,7 @@ def g20():
     return cafe_side(cam) + figs(cam, [J], extra=extra, shadow=False)
 
 
-@card("Edge of the bed", "S Se F Hom f", "Sit on the edge and lean back on both hands, legs stretched forward with ankles crossed, head tilted.",
+@card(128, "Edge of the bed", "S Se F Hom f", "Sit on the edge and lean back on both hands, legs stretched forward with ankles crossed, head tilted.",
       "Square-on at seated chest height with some floor in front of the feet.")
 def g21():
     cam = Cam(s=74, D=14, hc=4.0, feet_y=716)
@@ -239,7 +239,7 @@ def g21():
     return sc_home(cam, zw=-3.4) + figs(cam, [pose], extra=bed)
 
 
-@card("Sunset sit", "S Se W Bea b", "Sit on the sand facing the water, legs out, leaning back on both hands.",
+@card(129, "Sunset sit", "S Se W Bea b", "Sit on the sand facing the water, legs out, leaning back on both hands.",
       "Go wide from behind with the figure small and low in the frame against the bright sky.")
 def g22():
     cam = Cam(s=54, D=20, hc=3.4, feet_y=640)
@@ -248,14 +248,14 @@ def g22():
     return sc_beach(cam, sunset=True) + figs(cam, [pose])
 
 
-@card("Walk away", "S Wa F Str b", "Walk away from the camera across the street with hands at the pockets and an easy stride.",
+@card(130, "Walk away", "S Wa F Str b", "Walk away from the camera across the street with hands at the pockets and an easy stride.",
       "Shoot a burst from behind and keep the frame with the legs at full stride.")
 def g23():
     cam = Cam(**FULL)
     return sc_street(cam) + figs(cam, [walk(1, yaw=178, la=POCKET(1), ra=POCKET(-1))])
 
 
-@card("Walk and text", "S Wa F Str f", "Walk toward the camera looking down at the phone in one hand, other arm swinging.",
+@card(131, "Walk and text", "S Wa F Str f", "Walk toward the camera looking down at the phone in one hand, other arm swinging.",
       "A candid city frame. Shoot a burst and keep the one where the face is still visible.")
 def g24():
     cam = Cam(**FULL)
@@ -263,14 +263,14 @@ def g24():
     return sc_street(cam) + figs(cam, [J], extra=[phone(cam, J)])
 
 
-@card("Shoreline stroll", "S Wa W Bea s", "Stroll along the water's edge side-on, hands at the pockets, eyes down at the sand.",
+@card(132, "Shoreline stroll", "S Wa W Bea s", "Stroll along the water's edge side-on, hands at the pockets, eyes down at the sand.",
       "Go wide, place the walker small on a third line and leave the beach open ahead of them.")
 def g25():
     cam = Cam(**WIDE)
     return sc_beach(cam) + figs(cam, [walk(1, x=-1.6, yaw=84, nod=12, la=POCKET(1), ra=POCKET(-1))])
 
 
-@card("Stairs down", "S Wa F Ste f", "Come down the steps toward the camera mid-stride, arms swinging, eyes on the next step.",
+@card(133, "Stairs down", "S Wa F Ste f", "Come down the steps toward the camera mid-stride, arms swinging, eyes on the next step.",
       "Stand at the bottom, keep the camera level and shoot a burst as they descend.")
 def g26():
     cam = Cam(s=72, D=14, hc=4.4, feet_y=745)
@@ -280,14 +280,14 @@ def g26():
     return o + figs(cam, [pose], shadow=False)
 
 
-@card("Wave back", "S Wa T Par b", "Walk away, then twist round to look back and wave with the arm on that side.",
+@card(134, "Wave back", "S Wa T Par b", "Walk away, then twist round to look back and wave with the arm on that side.",
       "Crop at mid-thigh and shoot as they turn, so the body is still heading away.")
 def g27():
     cam = cam_tq()
     return sc_path(cam) + figs(cam, [walk(1, yaw=176, twist=28, turn=70, la=WAVE)], shadow=False)
 
 
-@card("Run in", "S Ac F Par f", "Run straight at the camera with a high knee and bent arms pumping.",
+@card(135, "Run in", "S Ac F Par f", "Run straight at the camera with a high knee and bent arms pumping.",
       "Shoot a burst from low down along the path and keep the frame with both feet off the ground.")
 def g28():
     cam = Cam(s=62, D=15, hc=4.4, feet_y=716)
@@ -295,7 +295,7 @@ def g28():
     return sc_path(cam) + figs(cam, [pose])
 
 
-@card("Tuck jump", "S Ac F Bea f", "Jump and pull both knees up to the chest, arms wrapped round the shins.",
+@card(136, "Tuck jump", "S Ac F Bea f", "Jump and pull both knees up to the chest, arms wrapped round the shins.",
       "Shoot from low in burst mode with sky behind the whole figure.")
 def g29():
     cam = Cam(s=62, D=15, hc=4.2, feet_y=720)
@@ -304,7 +304,7 @@ def g29():
     return sc_beach(cam) + figs(cam, [pose])
 
 
-@card("Spin", "S Ac F Fie f", "Turn on one foot with the other foot tucked at the knee and both arms rounded overhead.",
+@card(137, "Spin", "S Ac F Fie f", "Turn on one foot with the other foot tucked at the knee and both arms rounded overhead.",
       "Shoot a burst through the turn and keep the frame where the face comes round to the lens.")
 def g30():
     cam = Cam(s=62, D=15, hc=4.4, feet_y=716)
@@ -313,7 +313,7 @@ def g30():
     return sc_field(cam) + figs(cam, [pose])
 
 
-@card("Big stride", "S Ac F Str s", "Take an exaggerated leaping stride across the frame, front leg stretched out and arms swinging wide.",
+@card(138, "Big stride", "S Ac F Str s", "Take an exaggerated leaping stride across the frame, front leg stretched out and arms swinging wide.",
       "Shoot side-on in burst mode and leave space ahead of the front foot.")
 def g31():
     cam = Cam(s=62, D=15, hc=4.4, feet_y=712)
@@ -321,14 +321,14 @@ def g31():
     return sc_street(cam) + figs(cam, [pose])
 
 
-@card("Beach wanderer", "S Wa W Bea b", "Walk away along the beach at an unhurried pace, arms loose.",
+@card(139, "Beach wanderer", "S Wa W Bea b", "Walk away along the beach at an unhurried pace, arms loose.",
       "Go wide at sunset with the walker small on a third line and the sun over the opposite side.")
 def g32():
     cam = Cam(**WIDE)
     return sc_beach(cam, sunset=True) + figs(cam, [walk(1, x=2.2, yaw=172)])
 
 
-@card("Through the grass", "S Wa W Fie s", "Walk side-on through the field with one hand trailing out over the grass.",
+@card(140, "Through the grass", "S Wa W Fie s", "Walk side-on through the field with one hand trailing out over the grass.",
       "Go wide in low sun, keep the walker small and leave open field ahead of them.")
 def g33():
     cam = Cam(**WIDE)

@@ -1,0 +1,34 @@
+# Checks that index.html is exactly what the generator produces, and that the page works.
+name: Check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install the generator's dependencies
+        run: pip install -r generator/requirements.txt
+
+      # build.py also runs the data checks (numbers, tags, tips, SVG) and fails on any problem.
+      - name: Rebuild and compare with the committed page
+        run: |
+          python generator/build.py -o "$RUNNER_TEMP/index.html"
+          if ! cmp -s "$RUNNER_TEMP/index.html" index.html; then
+            echo "::error file=index.html::index.html is out of date or was edited by hand. Run 'python generator/build.py' and commit the result."
+            exit 1
+          fi
+
+      # Ubuntu runners block Chrome's sandbox, so it runs without one here.
+      - name: Smoke test in headless Chrome
+        env:
+          CHROME_FLAGS: --no-sandbox
+        run: python generator/smoke_test.py

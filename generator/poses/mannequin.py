@@ -404,4 +404,6 @@ def cast_shadow(prims, cam, gy=0.0, opacity=0.17, zclip=None):
 
 def render(prims, cam, lw=None):
     lw = lw or min(3.2, max(2.0, cam.s * 0.036))
-    return "".join(pr.svg(cam, lw) for pr in sorted(prims, key=lambda q: q.z()))
+    # Round the depth so parts at the same depth keep their insertion order (sorted is stable)
+    # instead of being ordered by last-bit float noise, which differs between machines.
+    return "".join(pr.svg(cam, lw) for pr in sorted(prims, key=lambda q: round(float(q.z()), 6)))

@@ -1,25 +1,8 @@
-"""Extra helpers for the large batch: registry, leg/arm fragments, small props and scenes."""
+"""Everything a card module needs: `from .helpers import *` brings in the camera, scenes, props,
+the @card decorator and the shared leg, arm and whole-pose snippets below."""
 from .scenes import *
 from .samples import on_thigh
-from .cards_b import shin_mid
-from .cards_c import kneel
-from .cards_e import sofa_front
-
-REG = []
-TAGS = {"S": "Solo", "P": "Partner", "G": "Group",
-        "St": "Standing", "Le": "Leaning", "Wa": "Walking", "Se": "Seated", "Cr": "Crouching", "Ly": "Lying",
-        "Ac": "Action", "Mx": "Mixed Levels",
-        "W": "Wide", "F": "Full Length", "T": "Three-Quarter", "U": "Waist Up", "C": "Close-Up",
-        "Str": "Street", "Par": "Park", "Bea": "Beach", "Fie": "Field", "Vie": "Viewpoint", "Wat": "Waterfront",
-        "Ste": "Steps", "Caf": "Café", "Hom": "Home", "Stu": "Studio",
-        "f": "Facing Camera", "s": "Side-On", "b": "Back to Camera"}
-
-
-def card(title, tags, pose, frame):
-    def deco(fn):
-        REG.append((title, [TAGS[t] for t in tags.split()], fn, pose, frame))
-        return fn
-    return deco
+from .registry import card, TAGS  # noqa: F401  (re-exported for card modules)
 
 
 def P(*frags, **kw):
@@ -149,3 +132,52 @@ def chair_side(cam, x=0.0, sg=1, seat=1.9, col="#6B7780", dark="#55616A"):
 
 def trunk(cam, x0, x1, z0=-0.5, z1=0.5):
     return box(cam, x0, x1, 0, 16, z0, z1, "#8A6F5A", "#8A6F5A", "#7A604C")
+
+
+# ---------------------------------------------------------------- shared pose snippets
+def shin_mid(J):
+    return (J["kl"] + J["al"] + J["kr"] + J["ar"]) / 4
+
+
+def kneel(**kw):
+    p = dict(py=2.33, ll=(2, 0, 0, -86), lf=(180, 8), rl=(8, 86, 3, 0),
+             ra=("ik", lambda J: J["kr"] + V(0.0, 0.34, 0.1)), la=HIP(1))
+    p.update(kw)
+    return p
+
+
+def sofa_front(cam, x0=-4.3, x1=4.3):
+    c1, c2, c3 = "#8FA7A0", "#7C958E", "#A4B8B2"
+    s = box(cam, x0, x1, 0, 3.9, -1.5, -0.9, c3, c2)
+    s += box(cam, x0 + 0.8, x1 - 0.8, 0.5, 1.7, -0.9, 0.9, c3, c1)
+    s += box(cam, x0, x0 + 0.8, 0, 2.8, -1.5, 0.9, c3, c2, c1)
+    s += box(cam, x1 - 0.8, x1, 0, 2.8, -1.5, 0.9, c3, c2, c1)
+    return s
+
+
+def hug_knees(J, dx):
+    return shin_mid(J) + J["Rr"] @ V(dx, 0.0, 0.34)
+
+
+def floor_knees(**kw):
+    p = dict(py=0.5, bend=18, ll=("ik", "g", (0.3, 0.17, 1.75), (0.1, 1, 0.2)), rl=("ik", "g", (-0.3, 0.17, 1.7), (-0.1, 1, 0.2)),
+             la=("ik", lambda J: hug_knees(J, -0.12), (1, -0.4, 0.1)), ra=("ik", lambda J: hug_knees(J, 0.12), (-1, -0.4, 0.1)))
+    p.update(kw)
+    return p
+
+
+def prone(**kw):
+    p = dict(z=-2.3, py=0.5, bend=70, nod=-62, ll=(8, -90, 6, -150), rl=(8, -90, 8, -128), lf=(0, 0), rf=(0, 0),
+             la=("ik", "g", (0.35, 0.16, 2.75), (0.9, -0.6, 0.3)), ra=("ik", "g", (-0.2, 0.16, 2.8), (-0.9, -0.6, 0.3)))
+    p.update(kw)
+    return p
+
+
+def run(phase=1, **kw):
+    f_leg, f_foot, b_leg, b_foot = (3, 62, 2, -25), (8, 20), (3, -18, 2, -85), (8, 55)
+    f_arm, b_arm = (8, 35, -8, 125), (8, -40, 0, 40)
+    p = dict(py=4.3, bend=10, nod=-6)
+    p.update(dict(rl=f_leg, rf=f_foot, ll=b_leg, lf=b_foot, la=f_arm, ra=b_arm) if phase == 1 else
+             dict(ll=f_leg, lf=f_foot, rl=b_leg, rf=b_foot, ra=f_arm, la=b_arm))
+    p.update(kw)
+    return p

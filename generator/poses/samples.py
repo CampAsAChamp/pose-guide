@@ -1,4 +1,5 @@
 from .mannequin import *
+from .registry import card
 
 W, H = 600, 800
 
@@ -43,6 +44,10 @@ def figs(cam, poses, extra=(), shadow_gy=0.0, shadow=True):
 
 
 # ================================================================ 01 weight shift
+@card(1, "Weight shift", "S St F Str f",
+      "Weight on one leg, the other knee soft. One hand at the hip pocket, chin turned slightly off-camera.",
+      "Full length with a little space above the head. Camera at waist height keeps the legs long.",
+      alt="Mannequin standing with weight on one leg and a hand at the hip, in front of a painted wall with a door.")
 def c_weight_shift():
     cam = Cam(s=68, D=15, hc=4.4, feet_y=706)
     zw = -3.4
@@ -74,6 +79,10 @@ def c_weight_shift():
 
 
 # ================================================================ 02 mid-stride
+@card(2, "Mid-stride", "S Wa F Str s",
+      "Walk across the frame at a normal pace, arms loose, eyes ahead rather than at the lens.",
+      "Shoot side-on in burst mode. Leave more room in front of the walker than behind.",
+      alt="Mannequin seen side-on in mid-stride on a zebra crossing with city buildings behind.")
 def c_walk():
     cam = Cam(s=68, D=15, hc=4.4, feet_y=704)
     hy = cam.hy
@@ -97,6 +106,10 @@ def c_walk():
 
 
 # ================================================================ 03 step sit
+@card(3, "Step sit", "S Se F Ste f",
+      "Sit on a step with one foot a step lower. Lean in, forearm on the raised knee, other hand on the step.",
+      "Shoot straight on so the steps run level. Camera at the sitter's chest height, both feet inside the frame.",
+      alt="Mannequin sitting on wide steps, leaning forward with a forearm on one raised knee and the other leg stretched down.")
 def c_steps():
     cam = Cam(s=84, D=12, hc=3.6, feet_y=347 + 3.6 * 84)
     rise, tread = 0.75, 1.3
@@ -129,6 +142,10 @@ def c_steps():
 
 
 # ================================================================ 04 warm cup
+@card(4, "Warm cup", "S Se U Caf f",
+      "Elbows on the table, both hands around the cup just below the chin, head tilted a touch.",
+      "Crop at the table edge. Eyes near the upper third line, window light coming from the side.",
+      alt="Waist-up mannequin at a café table, elbows on the table, holding a cup in both hands.")
 def c_coffee():
     cam = Cam(s=150, D=9, hc=4.75, feet_y=372 + 4.75 * 150)
     o = R(0, 0, W, H, "#E4D5C3")
@@ -162,6 +179,10 @@ def c_coffee():
 
 
 # ================================================================ 05 shoreline walk
+@card(5, "Shoreline walk", "P Wa F Bea f",
+      "Walk toward the camera holding hands and look at each other, not at the lens.",
+      "Centre the joined hands. Keep the horizon at chest height so it never cuts through a neck.",
+      alt="Two mannequins walking toward the camera on a beach, holding hands with heads turned to each other.")
 def c_couple():
     cam = Cam(s=70, D=15, hc=5.5, feet_y=716)
     hy = cam.hy
@@ -188,6 +209,10 @@ def on_thigh(sd):
     return lambda J: J["h" + sd] * 0.38 + J["k" + sd] * 0.62 + V(0, 0.4, 0)
 
 
+@card(6, "Wall triangle", "G Mx F Par f",
+      "Two sit at the ends and angle in toward the middle, two stand close behind. Heads form a triangle.",
+      "Leave air above the tallest head. Step back and zoom in so the people at the edges don't stretch.",
+      alt="Four mannequins in a park: two sitting at the ends of a low wall angled inward, two standing close behind.")
 def c_group():
     cam = Cam(s=68, D=15, hc=4.6, feet_y=706)
     hy = cam.hy
@@ -217,10 +242,3 @@ def c_group():
     d = dict(x=0.95, z=-1.5, yaw=-8, who="d", size=1.03, sh=3, tilt=-5, turn=-6, hip=-3,
              ra=("ik", "w", (-0.25, 4.3, -2.0), (0, -0.3, -1)), la=(6, 4, 3, 14))
     return o + figs(cam, [a, b, c, d], extra=extra)
-
-
-SAMPLES = [c_weight_shift, c_walk, c_steps, c_coffee, c_couple, c_group]
-
-GRID = ('<g stroke="#FFFFFF" stroke-width="1.5" opacity="0.7">'
-        '<line x1="200" y1="0" x2="200" y2="800"></line><line x1="400" y1="0" x2="400" y2="800"></line>'
-        '<line x1="0" y1="266.7" x2="600" y2="266.7"></line><line x1="0" y1="533.3" x2="600" y2="533.3"></line></g>')

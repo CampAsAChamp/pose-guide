@@ -2,7 +2,7 @@
 
 Loads the page in headless Chrome twice with the same browser profile and checks
 that it works end to end. Needs only the Python standard library and an
-installed Chrome (set CHROME=/path/to/chrome to use a different binary).
+installed Chrome (see chrome.py for the CHROME and CHROME_FLAGS settings).
 
 Steps:
   1. Find a Chrome binary.
@@ -22,21 +22,15 @@ from __future__ import annotations
 import json
 import os
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from chrome import find_chrome, headless_cmd  # noqa: E402
+
 PAGE = os.path.normpath(os.path.join(HERE, "..", "index.html"))
-CHROME_CANDIDATES = [
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-    "/Applications/Chromium.app/Contents/MacOS/Chromium",
-    "google-chrome",
-    "google-chrome-stable",
-    "chromium",
-    "chromium-browser",
-]
 
 # Runs before the app script. Records uncaught errors, rejected promises and
 # console.error calls so the probe can report them.
@@ -98,6 +92,9 @@ PROBE = r"""<script>
 
       location.hash = '#pose-5'; await sleep(200);
       check('#pose-5 opens viewer', $('viewer').open && $('vTitle').textContent.length > 0, $('vTitle').textContent);
+      // pose 5 has a hand-written description, which becomes part of the drawing's label
+      var vsvg = $('vArt').querySelector('svg'), vlabel = vsvg ? vsvg.getAttribute('aria-label') : '';
+      check('viewer drawing has description label', /^Pose 5, .+: .{20,}/.test(vlabel), vlabel);
       $('vSave').click();
       check('Save pose toggles on', $('vSave').getAttribute('aria-pressed') === 'true' && $('vSaveLabel').textContent === 'Saved', $('vSaveLabel').textContent);
       check('Save pose keeps heart icon', $('vSave').querySelector('svg'));
@@ -149,20 +146,6 @@ def log_step(message: str) -> None:
     print(f"[*] {message}", file=sys.stderr)
 
 
-def find_chrome() -> str:
-    """Return a path to a Chrome/Chromium binary, honouring $CHROME.
-
-    Outputs: the binary path. Side effects: exits with status 1 if none is found.
-    """
-    override = os.environ.get("CHROME")
-    for candidate in ([override] if override else []) + CHROME_CANDIDATES:
-        path = candidate if os.path.isabs(candidate) else shutil.which(candidate)
-        if path and os.path.exists(path):
-            return path
-    log_step("FAILED: no Chrome found. Install Chrome or set CHROME=/path/to/chrome.")
-    sys.exit(1)
-
-
 def write_probe_page(workdir: str) -> str:
     """Copy index.html into workdir with the error hook and probe injected.
 
@@ -186,15 +169,13 @@ def write_probe_page(workdir: str) -> str:
     return path
 
 
-def run_page(chrome: str, profile: str, page: str) -> dict:
+def run_page(profile: str, page: str) -> dict:
     """Load the probe page once in headless Chrome and return its results.
 
-    Inputs: Chrome path, profile folder (shared between runs so localStorage
+    Inputs: profile folder (shared between runs so localStorage
     carries over), probe page path. Outputs: {"results": [...], "errors": [...]}.
     """
-    cmd = [
-        chrome, "--headless=new", "--disable-gpu", "--no-first-run", "--no-default-browser-check",
-        f"--user-data-dir={profile}",
+    cmd = headless_cmd(profile) + [
         # Virtual time lets the probe's timers and hash changes finish without real waiting.
         "--virtual-time-budget=10000",
         "--dump-dom", "file://" + page,
@@ -224,7 +205,7 @@ def report(label: str, outcome: dict) -> int:
 def main() -> None:
     # Step 1: find Chrome.
     log_step("Step 1/4: finding Chrome")
-    chrome = find_chrome()
+    find_chrome()  # fail early, before any work
 
     with tempfile.TemporaryDirectory(prefix="pose-smoke-") as workdir:
         profile = os.path.join(workdir, "profile")
@@ -235,11 +216,11 @@ def main() -> None:
 
         # Step 3: first load, fresh profile.
         log_step("Step 3/4: run 1 (fresh profile)")
-        first = run_page(chrome, profile, page)
+        first = run_page(profile, page)
 
         # Step 4: second load with the same profile to check persistence.
         log_step("Step 4/4: run 2 (after reload)")
-        second = run_page(chrome, profile, page)
+        second = run_page(profile, page)
 
     failures = report("run 1", first) + report("run 2", second)
     total = len(first["results"]) + len(second["results"])

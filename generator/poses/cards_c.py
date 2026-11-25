@@ -1,8 +1,11 @@
 """Partner cards 23-30 and group cards 31-38."""
-from .scenes import *
-from .samples import on_thigh
+from .helpers import *
 
 
+@card(23, "Forehead touch", "P St T Fie s",
+      "Face each other and bring foreheads together. One holds the other's waist, the other's arms go up around the neck.",
+      "Shoot from the side and crop at mid-thigh. Keep both profiles the same distance from the lens.",
+      alt="Two mannequins facing each other in a field, foreheads touching, arms around waist and neck.")
 def k23():   # forehead touch
     cam = cam_tq(top=120, s=118)
     a = dict(x=-0.9, yaw=80, who="a", bend=8, nod=20,
@@ -12,6 +15,10 @@ def k23():   # forehead touch
     return sc_field(cam) + figs(cam, [a, b], shadow=False)
 
 
+@card(24, "Back hug", "P St T Par f",
+      "One stands behind with arms wrapped around the other's waist, heads side by side. Front person holds the arms.",
+      "Crop at mid-thigh. Turn the pair slightly so both faces sit at a similar distance from the lens.",
+      alt="One mannequin hugging another from behind, both facing the camera.")
 def k24():   # back hug
     cam = cam_tq(top=120, s=118)
     a = dict(x=-0.25, z=-0.38, yaw=6, who="a", bend=6, tilt=12, turn=4,
@@ -21,6 +28,10 @@ def k24():   # back hug
     return sc_park(cam) + figs(cam, [a, b], shadow=False)
 
 
+@card(25, "Piggyback", "P Ac F Par f",
+      "Rider's arms over the shoulders and knees at the carrier's waist. Carrier hooks the legs and leans forward a little.",
+      "Stand back for full length and shoot a burst while they move toward you.",
+      alt="One mannequin carrying another piggyback on a tree-lined path.")
 def k25():   # piggyback
     cam = Cam(s=64, D=15, hc=4.4, feet_y=712)
     a = dict(x=0, z=0.1, yaw=0, who="a", bend=14, nod=-10, ll=(6, 8, 3, -4), rl=(6, -6, 3, 4),
@@ -32,6 +43,10 @@ def k25():   # piggyback
     return sc_path(cam) + figs(cam, [a, b])
 
 
+@card(26, "Side by side", "P St F Str f",
+      "Stand hip to hip with an arm around each other. Free hands do something different: a pocket, a wave.",
+      "Full length with equal space either side. Ask them to lean their heads in so the gap closes.",
+      alt="Two mannequins standing side by side with arms around each other, one waving.")
 def k26():   # side by side
     cam = Cam(**FULL)
     a = dict(x=-0.98, yaw=8, who="a", hip=-5, sh=-3, tilt=5,
@@ -44,6 +59,10 @@ def k26():   # side by side
     return o + figs(cam, [a, b], zclip=-2.3)
 
 
+@card(27, "Bench for two", "P Se F Vie b",
+      "Sit close on a bench facing the view. One puts an arm around the other, who rests a head on the shoulder.",
+      "Shoot from behind with the bench low in the frame and the view filling the top half.",
+      alt="Two mannequins seen from behind on a bench facing mountains, one with an arm around the other.")
 def k27():   # bench for two, from behind
     cam = Cam(s=80, D=13, hc=4.3, feet_y=716)
     a = sit(x=-0.85, yaw=180, who="a", bend=-5, ll=(6, 88, 2, 4), rl=(6, 88, 2, 4),
@@ -52,6 +71,10 @@ def k27():   # bench for two, from behind
     return sc_view(cam) + figs(cam, [a, b], extra=bench(cam, -2.9, 2.9, back=-1))
 
 
+@card(28, "Look back", "P Wa F Par b",
+      "Walk away from the camera hand in hand. One turns to look back over the shoulder.",
+      "Centre the path and let it lead away. Take the frame when the joined hands are between the two bodies.",
+      alt="Two mannequins walking away down a path holding hands, one looking back.")
 def k28():   # look back
     cam = Cam(**FULL)
     a = walk(1, x=-1.2, yaw=176, who="a", ra=("ik", "w", (-0.06, 3.75, -0.1), (-0.3, 0, -1)))
@@ -60,6 +83,10 @@ def k28():   # look back
     return sc_path(cam) + figs(cam, [a, b])
 
 
+@card(29, "Back to back", "P St T Stu f",
+      "Stand back to back with arms folded, lean on each other slightly and turn both faces to the camera.",
+      "Crop at mid-thigh and keep the pair centred. Works best against a plain background.",
+      alt="Two mannequins back to back with arms folded, faces turned to the camera.")
 def k29():   # back to back
     cam = cam_tq(top=120, s=118)
     a = dict(x=-0.78, yaw=-58, who="a", bend=-3, turn=42, tilt=-3, la=CROSS_L, ra=CROSS_R)
@@ -67,6 +94,10 @@ def k29():   # back to back
     return bg_plain("#E3DDD3", "#EEE9E1") + figs(cam, [a, b], shadow=False)
 
 
+@card(30, "Table for two", "P Se T Caf s",
+      "Sit across a small table and lean in on the forearms. One lifts a cup while the other talks.",
+      "Shoot from the side with both profiles the same distance from the lens. Keep the tabletop in frame.",
+      alt="Two mannequins seated across a small café table seen from the side, one lifting a cup.")
 def k30():   # table for two
     cam = Cam(s=105, D=11, hc=4.6, feet_y=470 + 4.6 * 105)
     o = R(0, 0, W, H, "#E4D5C3")
@@ -100,6 +131,10 @@ def k30():   # table for two
     return o + figs(cam, [a, Jb], extra=extra, shadow=False)
 
 
+@card(31, "Squad walk", "G Wa F Str f",
+      "Walk toward the camera in a shallow V, middle pair a step ahead. Everyone does something different with their hands.",
+      "Back up, crouch slightly and shoot a burst. Leave room at the sides so nobody walks out of frame.",
+      alt="Four mannequins walking toward the camera across a zebra crossing.")
 def k31():   # squad walk
     cam = Cam(s=60, D=16, hc=4.4, feet_y=704)
     ps = [walk(1, x=-2.9, z=-0.7, yaw=6, who="c", la=POCKET(1), turn=20),
@@ -109,6 +144,10 @@ def k31():   # squad walk
     return sc_street(cam) + figs(cam, ps)
 
 
+@card(32, "Staggered line", "G St F Par f",
+      "Tallest in the middle, ends angled inward, arms behind each other's backs. Alternate who stands half a step forward.",
+      "Fill the width but keep a margin outside the end people. Camera at chest height to avoid stretching.",
+      alt="Five mannequins standing in a line in a park, arms around each other, the end ones angled inward.")
 def k32():   # staggered line
     cam = Cam(s=56, D=17, hc=4.5, feet_y=704)
     xs, zs = (-3.5, -1.75, 0, 1.75, 3.5), (0.35, -0.25, 0.1, -0.25, 0.35)
@@ -129,13 +168,10 @@ def k32():   # staggered line
     return sc_park(cam) + figs(cam, ps)
 
 
-def kneel(**kw):
-    p = dict(py=2.33, ll=(2, 0, 0, -86), lf=(180, 8), rl=(8, 86, 3, 0),
-             ra=("ik", lambda J: J["kr"] + V(0.0, 0.34, 0.1)), la=HIP(1))
-    p.update(kw)
-    return p
-
-
+@card(33, "Two rows", "G Mx F Fie f",
+      "Three stand close behind, two kneel on one knee in front of the gaps and angle in.",
+      "Drop the camera to the back row's waist height so both rows stay in proportion.",
+      alt="Five mannequins in a field: three standing behind and two kneeling on one knee in front.")
 def k33():   # two rows
     cam = Cam(s=58, D=16, hc=4.0, feet_y=712)
     zb = -1.3
@@ -151,6 +187,10 @@ def k33():   # two rows
     return sc_field(cam) + figs(cam, ps)
 
 
+@card(34, "Selfie huddle", "G St T Par f",
+      "Shortest in front, two behind leaning in until heads nearly touch. One stretches an arm out to hold the phone.",
+      "Hold the phone slightly above eye level and tilt it down. Check nobody is cut off at the edges.",
+      alt="Three mannequins huddled close, the one on the right reaching an arm toward the camera.")
 def k34():   # selfie huddle
     cam = cam_tq(top=150, s=118, hc=5.4, D=9)
     b = dict(x=0, z=0.45, who="b", size=0.94, tilt=2, la=(8, 6, 4, 30), ra=(8, 6, 4, 30))
@@ -161,6 +201,10 @@ def k34():   # selfie huddle
     return sc_park(cam) + figs(cam, [a, b, c], shadow=False)
 
 
+@card(35, "Group jump", "G Ac F Bea f",
+      "Count down and jump together. Each person picks a different shape: arms up, knees tucked, star.",
+      "Shoot from low in burst mode. Leave space above for the highest hands.",
+      alt="Four mannequins jumping on a beach in different shapes, shadows on the sand below.")
 def k35():   # group jump
     cam = Cam(s=50, D=18, hc=3.8, feet_y=724)
     ps = [
@@ -176,6 +220,10 @@ def k35():   # group jump
     return sc_beach(cam) + figs(cam, ps)
 
 
+@card(36, "Sofa stack", "G Mx F Hom f",
+      "Two sit on the sofa, one perches on the arm, one stands behind and leans forward on the backrest.",
+      "Camera at seated eye level. Keep the heads at three different heights so the group forms a loose triangle.",
+      alt="Four mannequins around a sofa: two seated, one on the armrest, one leaning over the back.")
 def k36():   # sofa stack
     cam = Cam(s=62, D=16, hc=3.9, feet_y=716)
     c1, c2, c3 = "#8FA7A0", "#7C958E", "#A4B8B2"
@@ -197,6 +245,10 @@ def k36():   # sofa stack
     return sc_home(cam, zw=-3.2) + figs(cam, [a, b, c, d], extra=sofa)
 
 
+@card(37, "Stair rows", "G Se F Ste f",
+      "Sit in two rows a couple of steps apart, back row in the gaps. Elbows on knees, lean toward the middle.",
+      "Shoot straight on so the steps run level. Back up until the whole group fits with a margin.",
+      alt="Five mannequins sitting on wide steps in two rows.")
 def k37():   # stair rows
     cam = Cam(s=70, D=14, hc=4.4, feet_y=704)
     rise, tread = 0.75, 1.3
@@ -232,6 +284,10 @@ def k37():   # stair rows
     return o + figs(cam, ps, shadow=False)
 
 
+@card(38, "Shoulder to shoulder", "G St W Vie b",
+      "Line up facing the view with arms across each other's shoulders and backs. One raises a free arm.",
+      "Go wide and keep the group in the lower half so the landscape does the talking.",
+      alt="Four mannequins seen from behind in a line with arms around each other, facing mountains.")
 def k38():   # shoulder to shoulder, from behind
     cam = Cam(s=50, D=20, hc=4.4, feet_y=660)
     xs = (-2.7, -0.9, 0.9, 2.7)
@@ -247,7 +303,3 @@ def k38():   # shoulder to shoulder, from behind
              ra=RELAX, hip=3),
     ]
     return sc_view(cam) + figs(cam, ps)
-
-
-PARTNER = [k23, k24, k25, k26, k27, k28, k29, k30]
-GROUP = [k31, k32, k33, k34, k35, k36, k37, k38]
